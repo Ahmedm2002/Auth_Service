@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: .
+  database:
+    image: postgres-apline
+    ports:
+      - "5432:5432"
+  redis:
+    build: redis
+    ports:
+      - "8080:80"
+
+volumes:
+
+networks:

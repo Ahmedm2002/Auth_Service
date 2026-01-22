@@ -1,0 +1,49 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^7.0.12",
+    "pg": "^8.17.2",
+    "pino-http": "^11.0.0",
+    "redis": "^5.10.0",
+    "zod": "^4.3.5"
+  },
+  "name": "auth_service",
+  "version": "1.0.0",
+  "description": "Scaleable authentication service with email verification and password reset options ",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "npm run test",
+    "build": "npx tsc",
+    "dev": "nodemon src/index.ts",
+    "start": "npx tsc && node dist/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmedm2002/Auth_Service.git"
+  },
+  "keywords": [
+    "Auth",
+    "Service",
+    "Scaleable"
+  ],
+  "author": "Ahmed Mujtaba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ahmedm2002/Auth_Service/issues"
+  },
+  "homepage": "https://github.com/Ahmedm2002/Auth_Service#readme",
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
