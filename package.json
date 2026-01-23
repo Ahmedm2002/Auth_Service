@@ -13,7 +13,7 @@
   },
   "name": "auth_service",
   "version": "1.0.0",
-  "description": "Scaleable authentication service with email verification and password reset options ",
+  "description": "Scaleable authentication service with email verification and password reset options",
   "main": "index.ts",
   "type": "module",
   "scripts": {
@@ -43,6 +43,7 @@
     "@types/node": "^25.0.10",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

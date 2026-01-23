@@ -42,6 +42,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "src/configs/db.js"],
   "exclude": ["dist", "node_modules", "*.docker", ".git*", "compose.yaml"]
 }
