@@ -4,6 +4,7 @@
     // File Layout
     "rootDir": "./",
     "outDir": "./dist",
+    "allowJs": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -42,6 +43,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["**/*.ts", "src/configs/db.js"],
+  "include": ["**/*.ts", "src/configs/db.ts"],
   "exclude": ["dist", "node_modules", "*.docker", ".git*", "compose.yaml"]
 }
