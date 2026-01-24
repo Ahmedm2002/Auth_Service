@@ -6,6 +6,7 @@ import {
 async function loginUser(req: Request, res: Response): Promise<any> {
   try {
     const validate = loginSchema.parse(req.body);
+    console.log("Validation: ", validate);
 
     return res.status(200).json({});
   } catch (error) {
