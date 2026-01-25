@@ -1,18 +1,11 @@
 import * as z from "zod";
 
-const emailSchema = z
-  .string()
-  .trim()
-  .email("Invalid Email")
-  .min(1, "Email is required");
+const emailSchema = z.email({ message: "Invalid email address" });
 
 const passwordSchema = z
   .string()
   .trim()
-  .min(8, "Invalid Password")
-  .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-  );
+  .min(8, "Password must be at least 8 characters long");
 
 const userNameSchema = z.string().trim().min(3, "Invalid user name");
 
