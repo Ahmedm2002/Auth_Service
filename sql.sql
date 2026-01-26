@@ -18,3 +18,12 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+
+CREATE TABLE IF NOT EXITS emails_verifications_tokens (
+  id uuid PRIMARY KEY NOT NULL,
+  user_id NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token_hash NOT NULL,
+  used_at TIMESTAMPTZ DEFAULT NULL,
+  revoked_at TIMESTAMPTZ DEFAULT NULL
+)
