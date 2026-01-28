@@ -4,6 +4,14 @@ import type { userI } from "../models/user.model.js";
 class Users {
   constructor() {}
 
+  whiteListedCols: string[] = [
+    "name",
+    "password_hash",
+    "profile_picture",
+    "last_login_at",
+    "updated_on",
+    "verified_at",
+  ];
   async getById(userId: string) {
     if (!userId) return null;
     try {
@@ -27,7 +35,7 @@ class Users {
       );
       return result.rows[0] || null;
     } catch (error: any) {
-      console.log("Error creating user", error.message);
+      console.log("Error while creating user", error.message);
     }
   }
   async updateUser(updateFields: string[], values: string[], userId: string) {
@@ -39,12 +47,10 @@ class Users {
     // - last_login_at
     // - updated_on
     // - verified_at
-
+    const query = updateFields.map((field, index) => `${index + 1}`);
+    const queryText = `Update users set () ${query} where id = $1`;
     try {
-      const result = await pool.query(
-        `Update users set where id = $1 RETURNING *`,
-        [userId]
-      );
+      const result = await pool.query(queryText, [userId, values]);
       return result.rows[0] || null;
     } catch (error: any) {
       console.log("Error updating user", error.message);

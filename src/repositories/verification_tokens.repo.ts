@@ -2,10 +2,11 @@
 
 class VerificationsToken {
   constructor() {}
-  // const token = jwt.sign()
-  async createTokens(userId: string, email: string) {
+  async create(userId: string, email: string) {
     if (!userId || !email) return null;
   }
   verifyAcessToken(token: string) {}
   revokeAccessToken(refreshToken: string) {}
 }
+
+export default VerificationsToken;
