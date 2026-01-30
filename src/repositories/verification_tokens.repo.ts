@@ -1,5 +1,3 @@
-// import jwt from "jsonwebtoken";
-
 class VerificationsToken {
   constructor() {}
   async create(userId: string, email: string) {

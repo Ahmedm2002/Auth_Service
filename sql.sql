@@ -20,10 +20,10 @@ CREATE TABLE IF NOT EXISTS user_sessions (
 );
 
 
-CREATE TABLE IF NOT EXITS emails_verifications_tokens (
-  id uuid PRIMARY KEY NOT NULL,
-  user_id NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  token_hash NOT NULL,
-  used_at TIMESTAMPTZ DEFAULT NULL,
-  revoked_at TIMESTAMPTZ DEFAULT NULL
+create table if not exists email_verification_tokens(
+  id uuid unique not null primary key,
+  user_id uuid not null unique references users(id) on delete cascade,
+  token_hash text not null,
+  used_at TIMESTAMPTZ default null,
+  revoked_at TIMESTAMPTZ default null
 )

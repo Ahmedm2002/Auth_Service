@@ -1,6 +1,8 @@
 import express, { type Express } from "express";
 import router from "./routes/index.js";
 import dotenv from "dotenv";
+import ApiResponse from "./utils/responses/ApiResponse.js";
+import ApiError from "./utils/responses/ApiError.js";
 
 dotenv.config();
 
@@ -13,12 +15,15 @@ app.use(express.json());
 app.use(`/api/${apiVersion}`, router);
 
 app.get(`/api/${apiVersion}`, (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Welcome to file sharing backend",
-    statusCode: 200,
-    apiVersion: apiVersion,
-  });
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { version: apiVersion },
+        "Welcome to auth service backend"
+      )
+    );
 });
 
 export { app };
