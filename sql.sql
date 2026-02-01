@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-
 create table if not exists email_verification_tokens(
   id uuid unique not null primary key,
   user_id uuid not null unique references users(id) on delete cascade,

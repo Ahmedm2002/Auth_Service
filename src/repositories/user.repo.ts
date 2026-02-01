@@ -25,6 +25,19 @@ class Users {
     }
   }
 
+  async getByEmail(email: string) {
+    if (!email) return null;
+    try {
+      const result = await pool.query(
+        "Select name, email, verified_at, profile_picture, id from users where email = $1 AND deleted_at IS  NULL",
+        [email]
+      );
+      return result.rows[0] || null;
+    } catch (error: any) {
+      console.log("Error occured while retrieving user by id", error.message);
+    }
+  }
+
   async createUser(user: userI) {
     if (!user) return null;
     const { name, email, password_hash } = user;
@@ -68,6 +81,15 @@ class Users {
       console.log("Error soft deleting user", error.message);
     }
   }
+  async getAllUsers() {
+    try {
+      const result = await pool.query("SELECT * FROM users");
+      return result.rows[0];
+    } catch (error: any) {
+      console.log("Error fetching all users", error.message);
+    }
+  }
 }
 
-export default Users;
+const user = new Users();
+export default user as Users;

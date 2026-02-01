@@ -14,13 +14,4 @@ async function insertData(table: string, fields: string, values: string[]) {
   }
 }
 
-insertData("test_table", "name, description", [
-  "Test Name",
-  "Test description",
-]);
-
 export default insertData;
-
-// id uuid,
-// name text unique not null,
-// description text
