@@ -7,6 +7,7 @@ import {
   signupSchema,
 } from "../utils/validations/Zod/auth.schema.js";
 import bcrypt from "bcrypt";
+import sendVerificationLink from "../services/nodeMailer/sendEmail.js";
 
 async function loginUser(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body;
@@ -47,7 +48,6 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     }
 
     const existingUser = await Users.getByEmail(email);
-    console.log("User already exists");
     if (existingUser) {
       return res
         .status(409)
@@ -61,6 +61,7 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     });
     if (newUser) {
       // generate an email for email verification
+      await sendVerificationLink(email, name);
 
       return res
         .status(200)
