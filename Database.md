@@ -10,11 +10,18 @@ The primary database of this auth service is postgres. The reason to use postgre
 
 This table stores the information of the users
 
-| Column | Data Type | Required |
-| id | UUID |
-| name | VARCHAR(30) |
-| email | VARCHAR(50) |
-| password_hash | TEXT |
+| Column          | Data Type    | Required | Constraints                           |
+| --------------- | ------------ | -------- | ------------------------------------- |
+| id              | UUID         | Yes      | PRIMARY KEY DEFAULT gen_random_uuid() |
+| name            | VARCHAR(30)  | Yes      | —                                     |
+| email           | VARCHAR(255) | Yes      | UNIQUE                                |
+| password_hash   | TEXT         | Yes      | —                                     |
+| last_login_at   | TIMESTAMPTZ  | No       | —                                     |
+| profile_picture | TEXT         | No       | —                                     |
+| verified_at     | TIMESTAMPTZ  | No       | —                                     |
+| deleted_at      | TIMESTAMPTZ  | No       | —                                     |
+| created_on      | TIMESTAMPTZ  | Yes      | DEFAULT now()                         |
+| updated_on      | TIMESTAMPTZ  | Yes      | DEFAULT now()                         |
 
 ### user_sessions
 

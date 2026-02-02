@@ -6,6 +6,7 @@ import {
   loginSchema,
   signupSchema,
 } from "../utils/validations/Zod/auth.schema.js";
+import bcrypt from "bcrypt";
 
 async function loginUser(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body;
@@ -46,19 +47,21 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     }
 
     const existingUser = await Users.getByEmail(email);
-    console.log("Existing User: ", existingUser);
+    console.log("User already exists");
     if (existingUser) {
       return res
         .status(409)
         .json(new ApiError(409, "Email already exists", []));
     }
+    const password_hash = await bcrypt.hash(password, 10);
     const newUser = await Users.createUser({
       name,
       email,
-      password_hash: password,
+      password_hash,
     });
     if (newUser) {
       // generate an email for email verification
+
       return res
         .status(200)
         .json(new ApiResponse(200, newUser, "User created successfully"));

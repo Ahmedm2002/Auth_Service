@@ -3,6 +3,7 @@ import router from "./routes/index.js";
 import dotenv from "dotenv";
 import ApiResponse from "./utils/responses/ApiResponse.js";
 import ApiError from "./utils/responses/ApiError.js";
+import transport from "./configs/nodemailer.js";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ console.log("Api Version: ", apiVersion);
 
 const app: Express = express();
 
+transport.verify();
 app.use(express.json());
 app.use(`/api/${apiVersion}`, router);
 
