@@ -1,0 +1,70 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+}
+
+.header {
+  text-align: center;
+  padding: 24px 16px;
+  background: #161616;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.flow-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.phase-card {
+  background: #161616;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+.phase-card:hover {
+  transform: translateY(-4px);
+  border-color: #4f46e5;
+}
+
+.phase-card h2 {
+  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.phase-content {
+  flex: 1;
+  min-height: 80px; /* placeholder height */
+  background: #0f0f0f;
+  border: 1px dashed #4f46e5; /* just to show placeholder area */
+  border-radius: 8px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .flow-container {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .phase-card {
+    padding: 12px;
+  }
+}

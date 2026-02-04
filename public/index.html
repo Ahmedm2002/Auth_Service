@@ -3,7 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Home - App Flow</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <header class="header">
+      <h1>Welcome, <span id="user-name">User</span></h1>
+    </header>
+
+    <main class="flow-container">
+      <!-- Phase cards -->
+      <div class="phase-card" id="signup">
+        <h2>Signup</h2>
+        <div class="phase-content">
+          <!-- Add images / text / diagrams later -->
+        </div>
+      </div>
+
+      <div class="phase-card" id="login">
+        <h2>Login</h2>
+        <div class="phase-content"></div>
+      </div>
+
+      <div class="phase-card" id="verify-email">
+        <h2>Email Verification</h2>
+        <div class="phase-content"></div>
+      </div>
+
+      <div class="phase-card" id="forgot-password">
+        <h2>Forgot Password</h2>
+        <div class="phase-content"></div>
+      </div>
+
+      <div class="phase-card" id="reset-password">
+        <h2>Reset Password</h2>
+        <div class="phase-content"></div>
+      </div>
+
+      <div class="phase-card" id="database-schema">
+        <h2>Database Schema</h2>
+        <div class="phase-content"></div>
+      </div>
+
+      <div class="phase-card" id="trade-offs">
+        <h2>Trade-offs / Checks</h2>
+        <div class="phase-content"></div>
+      </div>
+    </main>
+
+    <script>
+      // Dynamic username injection
+      const userNameSpan = document.getElementById("user-name");
+      const userName = "John"; // replace with backend/session value
+      userNameSpan.textContent = userName;
+    </script>
+  </body>
 </html>
