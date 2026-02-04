@@ -62,7 +62,7 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     if (newUser) {
       // generate an email for email verification
       // this is blocking code and increases latency for the signup api this should be added to a separate service for sending emails and not blocking the signup api flow
-      await sendVerificationLink(email, name);
+      // await sendVerificationLink(email, name);
 
       return res
         .status(200)

@@ -1,0 +1,13 @@
+{
+  "watch": [
+    "src",
+    "config",
+    "public",
+    "public/*",
+    "public/*/*.html",
+    "public/*/*.js",
+    "public/*/*.css"
+  ],
+  "ignore": ["src/logs/*.log"],
+  "ext": "js,json,ts"
+}

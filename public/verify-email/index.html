@@ -11,11 +11,11 @@
       <h1>Verify your email</h1>
 
       <p class="subtitle">
-        Hey <span id="user-name">John</span>, we sent a 4-digit code to
-        <span id="user-email">john@example.com</span>
+        Hey <span id="user-name"></span>, we sent a 4-digit code to
+        <span id="user-email"></span>
       </p>
 
-      <form class="otp-form">
+      <form class="otp-form" onsubmit="verifyEmail(event)">
         <div class="otp-inputs">
           <input type="text" inputmode="numeric" maxlength="1" />
           <input type="text" inputmode="numeric" maxlength="1" />
@@ -31,5 +31,6 @@
         <button type="button">Resend</button>
       </div>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>

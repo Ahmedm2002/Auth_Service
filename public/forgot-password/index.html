@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <form class="forgot">
+    <form class="forgot" onsubmit="sendEmailCode(event)">
       <h1>Forgot password</h1>
 
       <p class="subtitle">
@@ -28,5 +28,6 @@
         <a href="/login">Back to login</a>
       </div>
     </form>
+    <script src="script.js"></script>
   </body>
 </html>
