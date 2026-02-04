@@ -10,7 +10,7 @@ dotenv.config();
 const apiVersion = process.env.API_VERSION;
 
 const app: Express = express();
-app.use(express.static("public/*"));
+app.use(express.static("public/"));
 
 transport.verify();
 app.use(express.json());

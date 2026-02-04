@@ -4,6 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forgot Password</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <form class="forgot">
+      <h1>Forgot password</h1>
+
+      <p class="subtitle">
+        Enter your email and we’ll send you a link to reset your password.
+      </p>
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        autocomplete="email"
+      />
+
+      <button type="submit">Send reset link</button>
+
+      <div class="back-link">
+        <a href="/login">Back to login</a>
+      </div>
+    </form>
+  </body>
 </html>

@@ -1,0 +1,67 @@
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.signup {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.signup h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.signup input {
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  background: #161616;
+  color: #fff;
+  outline: none;
+}
+
+.signup input:focus {
+  border-color: #4f46e5;
+}
+
+.signup button {
+  margin-top: 8px;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  cursor: pointer;
+}
+
+.signup button:hover {
+  opacity: 0.9;
+}
+
+.login-link {
+  text-align: center;
+  font-size: 13px;
+  color: #a1a1aa;
+}
+
+.login-link a {
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}

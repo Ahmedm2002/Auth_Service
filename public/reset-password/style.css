@@ -14,7 +14,7 @@ body {
   justify-content: center;
 }
 
-.forgot {
+.reset {
   width: 100%;
   max-width: 360px;
   display: flex;
@@ -23,7 +23,7 @@ body {
   text-align: center;
 }
 
-.forgot h1 {
+.reset h1 {
   font-size: 22px;
   margin-bottom: 4px;
 }
@@ -34,7 +34,7 @@ body {
   line-height: 1.5;
 }
 
-.forgot input {
+.reset input {
   padding: 12px 14px;
   font-size: 14px;
   border-radius: 8px;
@@ -44,11 +44,11 @@ body {
   outline: none;
 }
 
-.forgot input:focus {
+.reset input:focus {
   border-color: #4f46e5;
 }
 
-.forgot button {
+.reset button {
   margin-top: 6px;
   padding: 12px;
   font-size: 14px;
@@ -59,20 +59,6 @@ body {
   cursor: pointer;
 }
 
-.forgot button:hover {
+.reset button:hover {
   opacity: 0.9;
-}
-
-.back-link {
-  margin-top: 8px;
-  font-size: 13px;
-}
-
-.back-link a {
-  color: #4f46e5;
-  text-decoration: none;
-}
-
-.back-link a:hover {
-  text-decoration: underline;
 }

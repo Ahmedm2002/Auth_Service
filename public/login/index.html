@@ -4,6 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <form class="login">
+      <h1>Welcome back</h1>
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        autocomplete="email"
+      />
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+        autocomplete="current-password"
+      />
+
+      <div class="login-meta">
+        <a href="/forgot-password" class="forgot-link"> Forgot password? </a>
+      </div>
+
+      <button type="submit">Log in</button>
+
+      <div class="signup-link">
+        Don’t have an account?
+        <a href="/signup">Sign up</a>
+      </div>
+    </form>
+  </body>
 </html>

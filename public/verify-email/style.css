@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f0f0f;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verify {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verify h1 {
+  font-size: 22px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #a1a1aa;
+  line-height: 1.5;
+}
+
+.subtitle span {
+  color: #ffffff;
+}
+
+.otp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.otp-inputs input {
+  width: 48px;
+  height: 54px;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  background: #161616;
+  color: #ffffff;
+  outline: none;
+}
+
+.otp-inputs input:focus {
+  border-color: #4f46e5;
+}
+
+.verify button[type="submit"] {
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4f46e5;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.verify button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+.resend {
+  font-size: 13px;
+  color: #a1a1aa;
+}
+
+.resend button {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  cursor: pointer;
+  padding: 0;
+}
+
+.resend button:hover {
+  text-decoration: underline;
+}
