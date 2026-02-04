@@ -8,9 +8,9 @@ import transport from "./configs/nodemailer.js";
 dotenv.config();
 
 const apiVersion = process.env.API_VERSION;
-console.log("Api Version: ", apiVersion);
 
 const app: Express = express();
+app.use(express.static("public/*"));
 
 transport.verify();
 app.use(express.json());

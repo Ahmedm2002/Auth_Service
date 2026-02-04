@@ -40,7 +40,7 @@ function verificationEmailTemplate(username: string, verifyUrl: string) {
                   </p>
 
                   <p style="margin:0 0 24px 0; color:#555; font-size:14px; line-height:1.6;">
-                    Click the button below to verify your email. This link will expire for security reasons.
+                    Click the button below to verify your email. This  in 5 minutes for security reasons.
                   </p>
 
                   <div style="text-align:center; margin:32px 0;">
@@ -69,7 +69,7 @@ function verificationEmailTemplate(username: string, verifyUrl: string) {
 
               <tr>
                 <td style="background:#f4f6f8; padding:16px; text-align:center; font-size:12px; color:#888;">
-                  © ${new Date().getFullYear()} Your Company. All rights reserved.
+                  © ${new Date().getFullYear()} GalaxyDev.pk limited. All rights reserved.
                 </td>
               </tr>
 

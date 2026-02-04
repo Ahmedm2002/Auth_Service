@@ -84,7 +84,7 @@ class Users {
   async getAllUsers() {
     try {
       const result = await pool.query("SELECT * FROM users");
-      return result.rows[0];
+      return result.rows;
     } catch (error: any) {
       console.log("Error fetching all users", error.message);
     }
