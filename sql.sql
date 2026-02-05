@@ -25,4 +25,5 @@ create table if not exists email_verification_tokens(
   token_hash text not null,
   used_at TIMESTAMPTZ default null,
   revoked_at TIMESTAMPTZ default null
-)
+  create_at TIMESTAMPTZ default NOW()
+) 

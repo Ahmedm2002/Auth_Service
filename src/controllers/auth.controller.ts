@@ -8,6 +8,7 @@ import {
 } from "../utils/validations/Zod/auth.schema.js";
 import bcrypt from "bcrypt";
 import sendVerificationLink from "../services/nodeMailer/sendEmail.js";
+import verificationTokens from "../repositories/verification_tokens.repo.js";
 
 async function loginUser(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body;
@@ -62,7 +63,9 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     if (newUser) {
       // generate an email for email verification
       // this is blocking code and increases latency for the signup api this should be added to a separate service for sending emails and not blocking the signup api flow
-      // await sendVerificationLink(email, name);
+      const token = await sendVerificationLink(email, name);
+      const token_hash = await bcrypt.hash(token, 10);
+      await verificationTokens.insert(newUser.id, token_hash);
 
       return res
         .status(200)

@@ -1,16 +1,17 @@
 import transport from "../../configs/nodemailer.js";
 
 async function sendVerificationLink(email: string, username: string) {
-  const code = "2341";
+  const code = getRandomNum();
   try {
     await transport.sendMail({
       to: email,
       subject: "Verify your email address",
       html: verificationEmailTemplate(username, code),
     });
-    console.log("Email sent");
+    return code;
   } catch (error: any) {
     console.error("Failed to send verification email:", error.message);
+    return "";
   }
 }
 
@@ -81,4 +82,12 @@ function verificationEmailTemplate(username: string, code: string) {
     </body>
   </html>
   `;
+}
+
+function getRandomNum(): string {
+  let code = "";
+  for (let i = 0; i < 4; i++) {
+    code += Math.floor(Math.random() * 9);
+  }
+  return code;
 }
