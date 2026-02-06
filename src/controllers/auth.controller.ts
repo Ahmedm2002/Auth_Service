@@ -7,7 +7,7 @@ import {
   signupSchema,
 } from "../utils/validations/Zod/auth.schema.js";
 import bcrypt from "bcrypt";
-import sendVerificationLink from "../services/nodeMailer/sendEmail.js";
+import sendVerificationCode from "../services/nodeMailer/sendEmail.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 
 async function loginUser(req: Request, res: Response): Promise<any> {
@@ -47,7 +47,6 @@ async function signupUser(req: Request, res: Response): Promise<any> {
         .status(400)
         .json(new ApiError(400, "Invalid inputs fields", ["Invalid fields"]));
     }
-
     const existingUser = await Users.getByEmail(email);
     if (existingUser) {
       return res
@@ -63,7 +62,8 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     if (newUser) {
       // generate an email for email verification
       // this is blocking code and increases latency for the signup api this should be added to a separate service for sending emails and not blocking the signup api flow
-      const token = await sendVerificationLink(email, name);
+      const token = await sendVerificationCode(email, name);
+      console.log("Token Send to ", newUser.email, ": ", token);
       const token_hash = await bcrypt.hash(token, 10);
       await verificationTokens.insert(newUser.id, token_hash);
 
@@ -73,7 +73,14 @@ async function signupUser(req: Request, res: Response): Promise<any> {
     }
   } catch (error) {
     console.log("Error: ", error);
-    return res.status(500).json({});
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "There was a problem at our end. Please try again later"
+        )
+      );
   }
 }
 

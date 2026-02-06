@@ -7,21 +7,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <p style="color: red; display: none" id="emailExists">
-      Email already registered
-    </p>
-    <p style="color: red; display: none" id="invalidInputs">
-      Please enter valid inputs
-    </p>
-    <p style="color: red; display: none" id="serverError">
-      There was an error at our end. Please try again later
-    </p>
-    <p style="color: springgreen; display: none" id="registrationSuccess">
-      You have successfully signed up. Navigating to verification of email
-      ......
-    </p>
     <form class="signup" onsubmit="signup(event)">
       <h1>Create account</h1>
+
+      <p id="signupRes" class="signup-response"></p>
 
       <input
         type="text"
@@ -59,6 +48,7 @@
         <a href="/login">Log in</a>
       </div>
     </form>
+
     <script src="script.js"></script>
   </body>
 </html>

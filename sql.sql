@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-  id UUID PRIMARY KEY,
+  id UUID PRIMARY KEY default gen_random_uuid(),
   name VARCHAR(30) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS user_sessions (
-  id UUID PRIMARY KEY,
+  id UUID PRIMARY KEY default gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   device_id TEXT UNIQUE NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
@@ -20,10 +20,10 @@ CREATE TABLE IF NOT EXISTS user_sessions (
 );
 
 create table if not exists email_verification_tokens(
-  id uuid unique not null primary key,
+  id UUID primary key default gen_random_uuid(),
   user_id uuid not null unique references users(id) on delete cascade,
   token_hash text not null,
   used_at TIMESTAMPTZ default null,
   revoked_at TIMESTAMPTZ default null
-  create_at TIMESTAMPTZ default NOW()
+  created_at TIMESTAMPTZ default NOW()
 ) 

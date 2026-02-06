@@ -17,6 +17,20 @@ class VerificationsToken {
       );
     }
   }
+
+  async getUserCode(userId: string) {
+    if (!userId) return;
+    try {
+      const result = await pool.query(
+        "Select token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
+        [userId]
+      );
+      return result.rows[0] || null;
+    } catch (error) {
+      console.log("Error while getting user's verification token");
+      return null;
+    }
+  }
   verifyAcessToken(token: string) {}
   revokeAccessToken(refreshToken: string) {}
 }

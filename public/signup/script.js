@@ -1,68 +1,75 @@
-let userName = document.getElementById("name");
-let email = document.getElementById("email");
-let password = document.getElementById("password");
-let confirmPassword = document.getElementById("confirmPassword");
-let emailExists = document.getElementById("emailExists");
-let serverError = document.getElementById("serverError");
-let registrationSuccess = document.getElementById("registrationSuccess");
-let invalidInputs = document.getElementById("invalidInputs");
+const userName = document.getElementById("name");
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const confirmPassword = document.getElementById("confirmPassword");
+const signupRes = document.getElementById("signupRes");
 
 async function signup(event) {
   event.preventDefault();
-  emailExists.style.display = "none";
-  serverError.style.display = "none";
-  invalidInputs.style.display = "none";
-  registrationSuccess.style.display = "none";
+
+  signupRes.style.display = "none";
+  signupRes.className = "signup-response";
 
   if (
     !userName.value ||
-    !password.value ||
     !email.value ||
+    !password.value ||
     !confirmPassword.value
   ) {
-    alert("Please enter all the details");
+    showError("Please enter all the details");
     return;
   }
+
   if (password.value.trim() !== confirmPassword.value.trim()) {
-    alert("Passwords must match");
+    showError("Passwords must match");
     return;
   }
-  let response = await fetch("/api/v1/auth/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value,
-      name: userName.value,
-    }),
-  });
-  response = await response.json();
-  console.log("Json Response: ", response);
-  if (response.status === 409 || response.statusCode === 409) {
-    emailExists.style.display = "block";
-    return;
-  }
-  if (response.status === 400 || response.statusCode === 400) {
-    invalidInputs.style.display = "block";
-    return;
-  }
-  if (response.status === 500 || response.statusCode === 500) {
-    serverError.style.display = "block";
-    return;
-  }
-  if (response.status === 200 || response.statusCode === 200) {
-    registrationSuccess.style.display = "block";
+
+  try {
+    let response = await fetch("/api/v1/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+        name: userName.value,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showError(data.message || "Signup failed");
+      return;
+    }
+
+    showSuccess(
+      "Account created successfully. Redirecting to email verification…"
+    );
+
     setTimeout(() => {
-      window.location.href = `/verify-email?name=${response.data.name}&email=${response.data.email}`;
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: data.data.name,
+          email: data.data.email,
+        })
+      );
+      window.location.href = "/verify-email";
     }, 2000);
-    return;
+  } catch (error) {
+    showError("Something went wrong. Please try again.");
   }
 }
 
-// {
-//   "email": "ahmedmujtaba0129@gmail.com",
-//   "password": "pasassword123@",
-//   "name" : "Ahmed Mujtaba"
-// }
+function showError(message) {
+  signupRes.innerText = message;
+  signupRes.classList.add("error");
+  signupRes.style.display = "block";
+}
+
+function showSuccess(message) {
+  signupRes.innerText = message;
+  signupRes.classList.add("success");
+  signupRes.style.display = "block";
+}
