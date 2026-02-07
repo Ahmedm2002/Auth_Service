@@ -18,17 +18,6 @@ class VerificationsToken {
     }
   }
 
-  async updateTokenUsage(tokenId: string) {
-    if (!tokenId) return;
-
-    try {
-      const result = await pool.query(
-        "update email_verification_tokens set used_at = now() where id = $1 ",
-        [tokenId]
-      );
-    } catch (error) {}
-  }
-
   async getUserCode(userId: string) {
     if (!userId) return;
     try {

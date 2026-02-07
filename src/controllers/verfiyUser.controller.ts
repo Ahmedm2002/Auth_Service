@@ -34,7 +34,7 @@ async function verifyEmail(req: Request, res: Response) {
     const issuedAt = new Date(token.created_at).getTime();
     const expires = issuedAt + 300000;
 
-    if (expires > Date.now()) {
+    if (Date.now() > expires) {
       return res.status(400).json(new ApiError(400, "Token Expired"));
     }
 
@@ -45,8 +45,7 @@ async function verifyEmail(req: Request, res: Response) {
     }
 
     // Success case token matched and not used and not expired
-    await User.setUserVerified(user.id);
-    await verificationTokens.updateTokenUsage(token.id);
+    await User.setUserVerified(user.id, token.id);
 
     return res
       .status(200)

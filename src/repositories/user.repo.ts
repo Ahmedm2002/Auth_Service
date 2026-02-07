@@ -81,14 +81,37 @@ class Users {
       console.log("Error soft deleting user", error.message);
     }
   }
-  async setUserVerified(userId: string) {
+  async setUserVerified(userId: string, tokenId: string) {
     if (!userId) return;
+    const client = await pool.connect();
     try {
-      const result = await pool.query(
-        "update users set verified_at = now() where id = $2",
+      await client.query("BEGIN");
+
+      await client.query(
+        `UPDATE users
+       SET verified_at = now()
+       WHERE id = $1
+       AND verified_at is NULL
+       `,
         [userId]
       );
-    } catch (error) {}
+
+      await client.query(
+        `UPDATE email_verification_tokens
+       SET used_at = now()
+       WHERE id = $1
+       AND used_at is NULL
+       `,
+        [tokenId]
+      );
+
+      await client.query("COMMIT");
+    } catch (error: any) {
+      console.log("Error in updated user status to verified: ", error.message);
+      await client.query("ROLLBACK");
+    } finally {
+      client.release();
+    }
   }
   async getAllUsers() {
     try {
