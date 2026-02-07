@@ -18,11 +18,22 @@ class VerificationsToken {
     }
   }
 
+  async updateTokenUsage(tokenId: string) {
+    if (!tokenId) return;
+
+    try {
+      const result = await pool.query(
+        "update email_verification_tokens set used_at = now() where id = $1 ",
+        [tokenId]
+      );
+    } catch (error) {}
+  }
+
   async getUserCode(userId: string) {
     if (!userId) return;
     try {
       const result = await pool.query(
-        "Select token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
+        "Select id, token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
         [userId]
       );
       return result.rows[0] || null;
@@ -31,8 +42,6 @@ class VerificationsToken {
       return null;
     }
   }
-  verifyAcessToken(token: string) {}
-  revokeAccessToken(refreshToken: string) {}
 }
 
 const verificationTokens = new VerificationsToken();

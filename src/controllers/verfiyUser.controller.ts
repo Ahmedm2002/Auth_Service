@@ -2,6 +2,7 @@ import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
 import type { Request, Response } from "express";
 import User from "../repositories/user.repo.js";
+import bcrypt from "bcrypt";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 
 async function verifyEmail(req: Request, res: Response) {
@@ -30,13 +31,37 @@ async function verifyEmail(req: Request, res: Response) {
         .json(new ApiResponse(200, "Email already verified"));
     }
 
-    const expires_at = new Date(
-      token.created_at.setMinutes(token.created_at.getMinutes() + 10)
-    );
-    console.log("Expires in :", expires_at);
-    // if(token.created_at )
-    return res.status(200).json({});
-  } catch (error) {}
+    const issuedAt = new Date(token.created_at).getTime();
+    const expires = issuedAt + 300000;
+
+    if (expires > Date.now()) {
+      return res.status(400).json(new ApiError(400, "Token Expired"));
+    }
+
+    const isTokenMatched = await bcrypt.compare(code, token.token_hash);
+
+    if (!isTokenMatched) {
+      return res.status(400).json(new ApiError(400, "Invalid code"));
+    }
+
+    // Success case token matched and not used and not expired
+    await User.setUserVerified(user.id);
+    await verificationTokens.updateTokenUsage(token.id);
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "User verified successfully"));
+  } catch (error: any) {
+    console.log("Error occured while verifying email: ", error.message);
+    return res
+      .status(500)
+      .json(
+        new ApiError(
+          500,
+          "The operation failed at our end. Please try again later. Thanks"
+        )
+      );
+  }
 }
 
 export { verifyEmail };

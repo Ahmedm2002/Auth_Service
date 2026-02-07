@@ -81,6 +81,15 @@ class Users {
       console.log("Error soft deleting user", error.message);
     }
   }
+  async setUserVerified(userId: string) {
+    if (!userId) return;
+    try {
+      const result = await pool.query(
+        "update users set verified_at = now() where id = $2",
+        [userId]
+      );
+    } catch (error) {}
+  }
   async getAllUsers() {
     try {
       const result = await pool.query("SELECT * FROM users");
