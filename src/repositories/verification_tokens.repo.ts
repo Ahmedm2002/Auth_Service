@@ -6,7 +6,7 @@ class VerificationsToken {
     if (!userId || !token) return null;
     try {
       const response = await pool.query(
-        "INSERT INTO email_verification_tokens (user_id, token_hash) VALUES ($1, $2) RETURNING id",
+        "INSERT INTO email_verification_tokens (user_id, token_hash) VALUES ($1, $2) on conflict(user_id) do update set token_hash = $2 RETURNING id",
         [userId, token]
       );
       return response.rows[0];
