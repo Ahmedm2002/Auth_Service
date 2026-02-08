@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   id UUID PRIMARY KEY default gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   device_id TEXT UNIQUE NOT NULL,
+  refresh_token TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

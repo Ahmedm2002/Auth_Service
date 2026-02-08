@@ -29,7 +29,7 @@ class Users {
     if (!email) return null;
     try {
       const result = await pool.query(
-        "Select name, email, verified_at, profile_picture, id from users where email = $1 AND deleted_at IS  NULL",
+        "Select name, email, verified_at, profile_picture, password_hash, id from users where email = $1 AND deleted_at IS  NULL",
         [email]
       );
       return result.rows[0] || null;

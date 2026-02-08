@@ -9,6 +9,9 @@ import {
 import bcrypt from "bcrypt";
 import sendVerificationCode from "../services/nodeMailer/sendEmail.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
+import crypto from "node:crypto";
+import userSession from "../repositories/user_session.repo.js";
+import generateTokens from "../services/jwt/generateTokens.js";
 
 async function loginUser(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body;
@@ -19,7 +22,40 @@ async function loginUser(req: Request, res: Response): Promise<any> {
         .status(400)
         .json(new ApiError(400, "Validation failed", validate.error.issues));
     }
-    return res.status(200).json({});
+    const user = await Users.getByEmail(email);
+    if (!user) {
+      return res.status(404).json(new ApiError(404, "User not found"));
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+      return res.status(400).json(new ApiError(400, "Invalid credentials"));
+    }
+
+    const deviceId = crypto.randomBytes(10).toString("hex");
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    const { accessToken, refreshToken } = generateTokens(user.id);
+    await userSession.create(user.id, deviceId, refreshToken);
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+        new ApiResponse(200, {
+          user: {
+            name: user.name,
+            email: user.email,
+            profile_picture: user.profile_picture,
+            id: user.id,
+            verified_at: user.verified_at,
+          },
+          deviceId,
+        })
+      );
   } catch (error) {
     console.log("Error: ", error);
     return res.status(500).json({});
