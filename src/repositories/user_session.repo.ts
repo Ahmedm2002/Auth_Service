@@ -1,10 +1,16 @@
 import { pool } from "../configs/db.js";
+import crypto from "node:crypto";
 class UserSessions {
   constructor() {}
   async create(userId: string, deviceId: string, refreshToken: string) {
     if (!userId || !deviceId || !refreshToken) {
       throw new Error("Missing required session fields");
     }
+
+    const refreshTokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
 
     try {
       const result = await pool.query(
@@ -13,7 +19,7 @@ class UserSessions {
         VALUES ($1, $2, now() + interval '7 days', $3)
         RETURNING id
         `,
-        [userId, deviceId, refreshToken]
+        [userId, deviceId, refreshTokenHash]
       );
 
       return result.rows[0] || null;
