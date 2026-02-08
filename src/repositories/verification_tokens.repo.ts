@@ -3,7 +3,8 @@ import { pool } from "../configs/db.js";
 class VerificationsToken {
   constructor() {}
   async insert(userId: string, token: string) {
-    if (!userId || !token) return null;
+    if (!userId || !token) throw new Error("Token and user id are missing");
+
     try {
       const response = await pool.query(
         "INSERT INTO email_verification_tokens (user_id, token_hash) VALUES ($1, $2) on conflict(user_id) do update set token_hash = $2 RETURNING id",
@@ -19,7 +20,7 @@ class VerificationsToken {
   }
 
   async getUserCode(userId: string) {
-    if (!userId) return;
+    if (!userId) throw new Error("User id required");
     try {
       const result = await pool.query(
         "Select id, token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",

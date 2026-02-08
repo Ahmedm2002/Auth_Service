@@ -7,7 +7,7 @@ type Tokens = {
 
 function generateTokens(userId: string): Tokens {
   if (!userId) {
-    throw new Error("userId is required");
+    throw new Error("User id required");
   }
 
   const accessSecret = process.env.JWT_ACCESS_SECRET;
