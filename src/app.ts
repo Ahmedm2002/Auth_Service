@@ -27,5 +27,11 @@ app.get(`/api/${apiVersion}`, (req, res) => {
       )
     );
 });
+// app.all("*", (req: Request, res: Response) => {
+//   return res.status(404).json(new ApiError(404, "Route not found"));
+// });
 
+// app.all("*", (req, res) => {
+//   return res.status(404).json(new ApiError(404, "Route not found"));
+// });
 export { app };

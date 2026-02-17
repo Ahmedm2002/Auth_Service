@@ -2,8 +2,6 @@
 
 The primary database of this auth service is postgres. The reason to use postgresql is due to its reliability and the performance along with the features like `ACID` and `WAL` that helps to store presistant data in the database.
 
-- Postgresql also provides row level locking which is usefull while checking of the users is already verified in case a user clicks twice on the row so to maintain data consistency `Row level Locks` are used to prevent race conditions
-
 ## Tables
 
 ### users

@@ -7,7 +7,7 @@ import {
   signupSchema,
 } from "../utils/validations/Zod/auth.schema.js";
 import bcrypt from "bcrypt";
-import sendVerificationCode from "../services/nodeMailer/sendEmail.js";
+import sendVerificationCode from "../services/nodeMailer/sendVerificationEmail.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import crypto from "node:crypto";
 import userSession from "../repositories/user_session.repo.js";
@@ -52,6 +52,7 @@ async function loginUser(req: Request, res: Response): Promise<any> {
             profile_picture: user.profile_picture,
             id: user.id,
             verified_at: user.verified_at,
+            accessToken,
           },
           deviceId,
         })

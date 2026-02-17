@@ -4,7 +4,8 @@ import type { Request, Response } from "express";
 import User from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
-import sendVerificationCode from "../services/nodeMailer/sendEmail.js";
+import sendVerificationCode from "../services/nodeMailer/sendVerificationEmail.js";
+import crypto from "node:crypto";
 
 async function verifyEmail(req: Request, res: Response) {
   const { code, email } = req.body;
