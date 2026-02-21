@@ -2,6 +2,7 @@ import userSession from "../repositories/user_session.repo.js";
 import type { Request, Response } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
+
 async function getAllSessions(req: Request, res: Response) {
   const userId = req.params.userId;
   if (!userId)
