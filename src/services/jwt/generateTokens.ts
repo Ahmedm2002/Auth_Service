@@ -5,6 +5,11 @@ type Tokens = {
   refreshToken: string;
 };
 
+/**
+ *
+ * @param userId
+ * @returns
+ */
 function generateTokens(userId: string): Tokens {
   if (!userId) {
     throw new Error("User id required");

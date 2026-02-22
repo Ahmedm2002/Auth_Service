@@ -28,3 +28,7 @@ create table if not exists email_verification_tokens(
   revoked_at TIMESTAMPTZ default null
   created_at TIMESTAMPTZ default NOW()
 ) 
+
+create table if not exists password_recovery_tokens(
+  id UUID primary key default gen_random_uuid()
+)

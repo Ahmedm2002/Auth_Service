@@ -12,8 +12,16 @@ import verificationTokens from "../repositories/verification_tokens.repo.js";
 import crypto from "node:crypto";
 import userSession from "../repositories/user_session.repo.js";
 import generateTokens from "../services/jwt/generateTokens.js";
+import CONSTANTS from "../constants.js";
+import type { userI } from "../models/user.model.js";
 
-async function loginUser(req: Request, res: Response): Promise<any> {
+/**
+ *
+ * @param req
+ * @param res
+ * @returns
+ */
+async function loginUser(req: Request, res: Response): Promise<Response> {
   const { email, password } = req.body;
   try {
     const validate = loginSchema.safeParse(req.body);
@@ -22,7 +30,7 @@ async function loginUser(req: Request, res: Response): Promise<any> {
         .status(400)
         .json(new ApiError(400, "Validation failed", validate.error.issues));
     }
-    const user = await Users.getByEmail(email);
+    const user: userI = await Users.getByEmail(email);
     if (!user) {
       return res.status(404).json(new ApiError(404, "User not found"));
     }
@@ -37,8 +45,9 @@ async function loginUser(req: Request, res: Response): Promise<any> {
       httpOnly: true,
       secure: true,
     };
-    const { accessToken, refreshToken } = generateTokens(user.id);
-    await userSession.create(user.id, deviceId, refreshToken);
+
+    const { accessToken, refreshToken } = generateTokens(user.id!);
+    await userSession.create(user.id!, deviceId, refreshToken);
 
     return res
       .status(200)
@@ -59,26 +68,44 @@ async function loginUser(req: Request, res: Response): Promise<any> {
       );
   } catch (error) {
     console.log("Error: ", error);
-    return res.status(500).json({});
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
 
-async function getAllUsers(req: Request, res: Response) {
+/**
+ *
+ * @param req
+ * @param res
+ * @returns
+ */
+async function getAllUsers(req: Request, res: Response): Promise<Response> {
   try {
-    const users = await Users.getAllUsers();
-    if (users) {
-      return res
-        .status(200)
-        .json(new ApiResponse(200, users, "Users fetched successfully"));
+    const users: userI[] | null = await Users.getAllUsers();
+    if (users?.length === 0) {
+      return res.status(200).json(new ApiResponse(200, "No users found"));
     }
-    return res.status(200).json(new ApiResponse(200));
-  } catch (error) {}
+    return res
+      .status(200)
+      .json(new ApiResponse(200, users, "Users fetched successfully"));
+  } catch (error: any) {
+    console.log("Error getting all users: ", error.message);
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
+  }
 }
 
-async function signupUser(req: Request, res: Response): Promise<any> {
+/**
+ *
+ * @param req
+ * @param res
+ * @returns
+ */
+async function signupUser(req: Request, res: Response): Promise<Response> {
   const { name, password, email } = req.body;
   try {
-    const validate = signupSchema.safeParse({ userName: name, ...req.body });
+    const validate = signupSchema.safeParse({
+      userName: name,
+      ...req.body,
+    });
     if (!validate.success) {
       return res
         .status(400)
@@ -91,33 +118,25 @@ async function signupUser(req: Request, res: Response): Promise<any> {
         .json(new ApiError(409, "Email already exists", []));
     }
     const password_hash = await bcrypt.hash(password, 10);
-    const newUser = await Users.createUser({
+    const newUser: userI = await Users.createUser({
       name,
       email,
       password_hash,
     });
-    if (newUser) {
-      // generate an email for email verification
-      // this is blocking code and increases latency for the signup api this should be added to a separate service for sending emails and not blocking the signup api flow
-      const token = await sendVerificationCode(email, name);
-      console.log("Token Send to ", newUser.email, ": ", token);
-      const token_hash = await bcrypt.hash(token, 10);
-      await verificationTokens.insert(newUser.id, token_hash);
 
-      return res
-        .status(200)
-        .json(new ApiResponse(200, newUser, "User created successfully"));
-    }
-  } catch (error) {
-    console.log("Error: ", error);
+    // generate an email for email verification
+    // this is blocking code and increases latency for the signup api this should be added to a separate service for sending emails and not blocking the signup api flow
+    const token = await sendVerificationCode(email, name);
+    console.log("Token Send to ", newUser.email, ": ", token);
+    const token_hash = await bcrypt.hash(token, 10);
+    await verificationTokens.insert(newUser.id!, token_hash);
+
     return res
-      .status(500)
-      .json(
-        new ApiError(
-          500,
-          "There was a problem at our end. Please try again later"
-        )
-      );
+      .status(200)
+      .json(new ApiResponse(200, newUser, "User created successfully"));
+  } catch (error: any) {
+    console.log("Error: ", error.message);
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
 

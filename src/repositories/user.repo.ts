@@ -1,6 +1,10 @@
 import { pool } from "../configs/db.js";
 import type { userI } from "../models/user.model.js";
+import type { QueryResult } from "pg";
 
+/**
+ *
+ */
 class Users {
   constructor() {}
 
@@ -12,45 +16,69 @@ class Users {
     "updated_on",
     "verified_at",
   ];
-  async getById(userId: string) {
+  /**
+   *
+   * @param userId
+   * @returns
+   */
+  async getById(userId: string): Promise<userI | null> {
     if (!userId) return null;
     try {
-      const result = await pool.query(
+      const result: QueryResult<userI> = await pool.query(
         "Select name, email, verified_at, profile_picture, id from users where id = $1 AND deleted_at IS  NULL",
         [userId]
       );
       return result.rows[0] || null;
     } catch (error: any) {
       console.log("Error occured while retrieving user by id", error.message);
+      throw new Error("Error retreving user by id");
     }
   }
 
-  async getByEmail(email: string) {
-    if (!email) return null;
+  /**
+   *
+   * @param email
+   * @returns
+   */
+  async getByEmail(email: string): Promise<userI> {
     try {
-      const result = await pool.query(
+      const result: QueryResult = await pool.query(
         "Select name, email, verified_at, profile_picture, password_hash, id from users where email = $1 AND deleted_at IS  NULL",
         [email]
       );
-      return result.rows[0] || null;
+      return result.rows[0] ?? null;
     } catch (error: any) {
       console.log("Error occured while retrieving user by id", error.message);
+      throw new Error("Error retrieving user by email");
     }
   }
 
-  async createUser(user: userI) {
-    if (!user) return null;
+  /**
+   *
+   * @param user
+   * @returns
+   */
+  async createUser(user: userI): Promise<userI> {
     const { name, email, password_hash } = user;
     try {
-      const result = await pool.query(
+      const result: QueryResult = await pool.query(
         `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email, verified_at, created_on`,
         [name, email, password_hash]
       );
-      return result.rows[0] || null;
+      return result.rows[0];
     } catch (error: any) {
       console.log("Error while creating user", error.message);
+      throw new Error("Error creating user");
     }
   }
+
+  /**
+   *
+   * @param updateFields
+   * @param values
+   * @param userId
+   * @returns
+   */
   async updateUser(updateFields: string[], values: string[], userId: string) {
     // fields that will be allowed to updated by user
 
@@ -69,20 +97,31 @@ class Users {
       console.log("Error updating user", error.message);
     }
   }
-  async deleteUser(userId: string) {
-    if (!userId) return null;
+
+  /**
+   *
+   * @param userId
+   * @returns
+   */
+  async deleteUser(userId: string): Promise<userI> {
     try {
-      const result = await pool.query(
+      const result: QueryResult = await pool.query(
         "Update users set deleted_at = $1 where id = $2",
         [new Date(), userId]
       );
       return result.rows[0] || null;
     } catch (error: any) {
       console.log("Error soft deleting user", error.message);
+      throw new Error("Error deleting user");
     }
   }
+  /**
+   *
+   * @param userId
+   * @param tokenId
+   * @returns
+   */
   async setUserVerified(userId: string, tokenId: string) {
-    if (!userId) return;
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
@@ -113,12 +152,18 @@ class Users {
       client.release();
     }
   }
-  async getAllUsers() {
+
+  /**
+   *
+   * @returns
+   */
+  async getAllUsers(): Promise<userI[]> {
     try {
-      const result = await pool.query("SELECT * FROM users");
+      const result: QueryResult = await pool.query("SELECT * FROM users");
       return result.rows;
     } catch (error: any) {
       console.log("Error fetching all users", error.message);
+      throw new Error("Error getting all users");
     }
   }
 }

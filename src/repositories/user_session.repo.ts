@@ -1,12 +1,24 @@
+import type { QueryResult } from "pg";
 import { pool } from "../configs/db.js";
 import crypto from "node:crypto";
+import type { userSessionI } from "../models/user-sessions.model.js";
+/**
+ *
+ */
 class UserSessions {
   constructor() {}
+  /**
+   *
+   * @param userId
+   * @param deviceId
+   * @param refreshToken
+   * @returns
+   */
   async create(
     userId: string,
     deviceId: string,
     refreshToken: string
-  ): Promise<string | null> {
+  ): Promise<userSessionI | null> {
     if (!userId || !deviceId || !refreshToken) {
       throw new Error("Missing required session fields");
     }
@@ -17,7 +29,7 @@ class UserSessions {
       .digest("hex");
 
     try {
-      const result = await pool.query(
+      const result: QueryResult<userSessionI> = await pool.query(
         `
         INSERT INTO user_sessions (user_id, device_id, expires_at, refresh_token)
         VALUES ($1, $2, now() + interval '7 days', $3)
@@ -35,29 +47,37 @@ class UserSessions {
       throw new Error("Error while registering user session: ", error.message);
     }
   }
-  async update(sessionId: string) {}
-  async delete(sessionId: string): Promise<string[] | null> {
+  /**
+   *
+   * @param sessionId
+   * @returns
+   */
+  async delete(sessionId: string): Promise<userSessionI | null> {
     if (!sessionId) throw new Error("Session id required");
     try {
-      const result = await pool.query(
-        "delete from user_session where id = $1",
+      const result: QueryResult<userSessionI> = await pool.query(
+        "delete from user_sessions where id = $1 returning id",
         [sessionId]
       );
-      return result[0].rows || null;
+      return result.rows[0] || null;
     } catch (error: any) {
       console.log("Error occured deleting user session: ", error.message);
       throw new Error("Error occured during deleting user session");
     }
   }
 
-  async getAll(userId: string) {
-    if (!userId) throw new Error("User id requied to get all user sessions");
+  /**
+   *
+   * @param userId
+   * @returns
+   */
+  async getAll(userId: string): Promise<userSessionI[]> {
     try {
-      const session = await pool.query(
+      const session: QueryResult<userSessionI> = await pool.query(
         "select * from user_sessions where user_id = $1",
         [userId]
       );
-      return session[0];
+      return session.rows ?? null;
     } catch (error: any) {
       console.log("Error getting users sessions: ", error.message);
       throw new Error("Error getting users sessions");
@@ -67,4 +87,4 @@ class UserSessions {
 
 const userSession = new UserSessions();
 
-export default userSession as UserSessions;
+export default userSession;
