@@ -17,6 +17,6 @@ async function testNodemailer() {
   }
 }
 
-testNodemailer();
+// testNodemailer();
 
 export default transport;

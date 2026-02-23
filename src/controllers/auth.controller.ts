@@ -40,14 +40,15 @@ async function loginUser(req: Request, res: Response): Promise<Response> {
     }
 
     const deviceId = crypto.randomBytes(10).toString("hex");
-
+    // TODO: Detect the user device type i.e mobile, browser etc
+    const deviceType = "";
     const options = {
       httpOnly: true,
       secure: true,
     };
 
     const { accessToken, refreshToken } = generateTokens(user.id!);
-    await userSession.create(user.id!, deviceId, refreshToken);
+    await userSession.create(user.id!, deviceId, refreshToken, deviceType);
 
     return res
       .status(200)
@@ -80,7 +81,7 @@ async function loginUser(req: Request, res: Response): Promise<Response> {
  */
 async function getAllUsers(req: Request, res: Response): Promise<Response> {
   try {
-    const users: userI[] | null = await Users.getAllUsers();
+    const users: userI[] = await Users.getAllUsers();
     if (users?.length === 0) {
       return res.status(200).json(new ApiResponse(200, "No users found"));
     }

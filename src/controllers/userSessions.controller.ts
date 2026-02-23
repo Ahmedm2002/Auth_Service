@@ -29,9 +29,27 @@ async function getAllSessions(req: Request, res: Response) {
   }
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 async function invalidateSession(req: Request, res: Response) {
+  console.log("req.body: ", req.body);
+  const { sessionId, deviceId } = req.body;
+  if (!sessionId || !deviceId) {
+    return res.status(400).json(new ApiError(400, "Required fields missing"));
+  }
+
   try {
-  } catch (error) {}
+    const id: string = await userSession.deleteUserSession(sessionId);
+    if (!id) {
+    }
+    return res.status(200).json(new ApiResponse(200, id, "Logout successfull"));
+  } catch (error: any) {
+    console.log("Error invalidating user session: ", error?.message);
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
+  }
 }
 
-export { getAllSessions };
+export { getAllSessions, invalidateSession };

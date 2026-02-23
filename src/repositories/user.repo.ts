@@ -21,14 +21,13 @@ class Users {
    * @param userId
    * @returns
    */
-  async getById(userId: string): Promise<userI | null> {
-    if (!userId) return null;
+  async getById(userId: string): Promise<userI> {
     try {
-      const result: QueryResult<userI> = await pool.query(
+      const result: QueryResult = await pool.query(
         "Select name, email, verified_at, profile_picture, id from users where id = $1 AND deleted_at IS  NULL",
         [userId]
       );
-      return result.rows[0] || null;
+      return result.rows[0] ?? null;
     } catch (error: any) {
       console.log("Error occured while retrieving user by id", error.message);
       throw new Error("Error retreving user by id");

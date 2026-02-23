@@ -17,7 +17,8 @@ class UserSessions {
   async create(
     userId: string,
     deviceId: string,
-    refreshToken: string
+    refreshToken: string,
+    deviceType: string
   ): Promise<userSessionI | null> {
     if (!userId || !deviceId || !refreshToken) {
       throw new Error("Missing required session fields");
@@ -31,11 +32,11 @@ class UserSessions {
     try {
       const result: QueryResult<userSessionI> = await pool.query(
         `
-        INSERT INTO user_sessions (user_id, device_id, expires_at, refresh_token)
-        VALUES ($1, $2, now() + interval '7 days', $3)
+        INSERT INTO user_sessions (user_id, device_id, expires_at, refresh_token, device_type)
+        VALUES ($1, $2, now() + interval '7 days', $3, $4)
         RETURNING id
         `,
-        [userId, deviceId, refreshTokenHash]
+        [userId, deviceId, refreshTokenHash, deviceType]
       );
 
       return result.rows[0] || null;
@@ -81,6 +82,19 @@ class UserSessions {
     } catch (error: any) {
       console.log("Error getting users sessions: ", error.message);
       throw new Error("Error getting users sessions");
+    }
+  }
+
+  async deleteUserSession(sessionId: string): Promise<string> {
+    try {
+      const result: QueryResult = await pool.query(
+        "Delete from user_sessions where id = $1 returning id",
+        [sessionId]
+      );
+      return result.rows[0];
+    } catch (error: any) {
+      console.log("Error deleting user session");
+      throw new Error("Error deleting user session");
     }
   }
 }

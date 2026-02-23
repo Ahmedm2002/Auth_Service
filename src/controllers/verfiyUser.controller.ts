@@ -5,7 +5,9 @@ import User from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import sendVerificationCode from "../services/nodeMailer/sendVerificationEmail.js";
-import crypto from "node:crypto";
+import type { VerificationsTokenI } from "../models/verification-tokens.model.js";
+import type { userI } from "../models/user.model.js";
+import CONSTANTS from "../constants.js";
 
 async function verifyEmail(req: Request, res: Response) {
   const { code, email } = req.body;
@@ -16,15 +18,22 @@ async function verifyEmail(req: Request, res: Response) {
         .json(new ApiError(400, "Please enter 4 verification code"));
     }
 
-    const user = await User.getByEmail(email);
+    const user: userI = await User.getByEmail(email);
     if (!user) {
       return res.status(404).json(new ApiError(404, "User not found"));
     }
-    const token = await verificationTokens.getUserCode(user.id);
+    const token: VerificationsTokenI = await verificationTokens.getUserCode(
+      user.id!
+    );
     if (!token) {
       return res
         .status(404)
-        .json(new ApiError(404, "No code found. Please signup"));
+        .json(
+          new ApiError(
+            404,
+            "No code found. Please signup or send click resend token"
+          )
+        );
     }
 
     if (token.used_at) {
@@ -47,21 +56,14 @@ async function verifyEmail(req: Request, res: Response) {
     }
 
     // Success case token matched and not used and not expired
-    await User.setUserVerified(user.id, token.id);
+    await User.setUserVerified(user.id!, token.id);
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, "User verified successfully"));
   } catch (error: any) {
     console.log("Error occured while verifying email: ", error.message);
-    return res
-      .status(500)
-      .json(
-        new ApiError(
-          500,
-          "The operation failed at our end. Please try again later. Thanks"
-        )
-      );
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
 
@@ -84,19 +86,12 @@ async function resendCode(req: Request, res: Response) {
     const token = await sendVerificationCode(user.email, user.name);
     console.log("Token Send to ", user.email, ": ", token);
     const token_hash = await bcrypt.hash(token, 10);
-    await verificationTokens.insert(user.id, token_hash);
+    await verificationTokens.insert(user.id!, token_hash);
 
     return res.status(200).json(new ApiResponse(200, "Code send to email"));
   } catch (error: any) {
     console.log("Error while resending user's code : ", error.message);
-    return res
-      .status(500)
-      .json(
-        new ApiError(
-          500,
-          "The operation failed at our end. Please try again later. Thanks"
-        )
-      );
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
 

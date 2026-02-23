@@ -35,14 +35,13 @@ class VerificationsToken {
    * @param userId
    * @returns
    */
-  async getUserCode(userId: string): Promise<VerificationsTokenI | null> {
-    if (!userId) throw new Error("User id required");
+  async getUserCode(userId: string): Promise<VerificationsTokenI> {
     try {
       const result: QueryResult = await pool.query(
         "Select id, token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
         [userId]
       );
-      return result.rows[0] || null;
+      return result.rows[0];
     } catch (error) {
       console.log("Error while getting user's verification token");
       throw new Error("Error getting user code");

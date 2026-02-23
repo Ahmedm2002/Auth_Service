@@ -3,6 +3,7 @@ export interface VerificationsTokenI {
   user_id: string;
   used_at: string;
   device_id: string;
-  expires_in: string;
+  token_hash: string;
+  created_at: string;
   revoked_at: string;
 }

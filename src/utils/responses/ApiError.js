@@ -1,10 +1,10 @@
 /**
  *
- * @param statusCode boolean
- * @param message string
- * @param success bolean
- * @param errors string[]
- * @param stack any
+ * @param {boolean} statusCode
+ * @param {string} message
+ * @param {boolean} success
+ * @param {string[]} errors
+ * @param {any} stack
  */
 
 class ApiError extends Error {

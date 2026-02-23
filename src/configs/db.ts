@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const pool = new Pool({
+const pool: Pool = new Pool({
   host: process.env.DATABASE_HOST,
   port: Number(process.env.DATABASE_PORT),
   database: process.env.DATABASE_NAME,
