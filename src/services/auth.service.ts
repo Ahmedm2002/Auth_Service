@@ -53,3 +53,5 @@ class AuthService {
 }
 
 const authServ = new AuthService();
+
+export default authServ as AuthService
