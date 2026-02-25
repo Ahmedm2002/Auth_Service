@@ -39,7 +39,7 @@ class UserSessions {
         [userId, deviceId, refreshTokenHash, deviceType]
       );
 
-      return result.rows[0] || null;
+      return result.rows[0] ?? null;
     } catch (error: any) {
       console.log(
         "Error occured while registering user session: ",
@@ -60,7 +60,7 @@ class UserSessions {
         "delete from user_sessions where id = $1 returning id",
         [sessionId]
       );
-      return result.rows[0] || null;
+      return result.rows[0] ?? null;
     } catch (error: any) {
       console.log("Error occured deleting user session: ", error.message);
       throw new Error("Error occured during deleting user session");

@@ -8,7 +8,12 @@
  */
 
 class ApiError extends Error {
-  constructor(statusCode, message, errors = [], stack) {
+  statusCode: number;
+  data: null;
+  success: boolean;
+  errors: any;
+
+  constructor(statusCode: number, message: string, errors?: any, stack?: any) {
     super();
     this.statusCode = statusCode;
     this.data = null;

@@ -5,8 +5,9 @@
     "allowJs": true,
 
     "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "esnext",
-    "types": [],
+    "types": ["jest"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,

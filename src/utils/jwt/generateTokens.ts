@@ -51,4 +51,4 @@ function generateTokens(userId: string): Tokens {
   return { accessToken, refreshToken };
 }
 
-export default generateTokens;
+export { generateTokens, type Tokens };

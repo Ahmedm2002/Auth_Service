@@ -7,11 +7,11 @@ import {
   signupSchema,
 } from "../utils/validations/Zod/auth.schema.js";
 import bcrypt from "bcrypt";
-import sendVerificationCode from "../services/nodeMailer/sendVerificationEmail.js";
+import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import crypto from "node:crypto";
 import userSession from "../repositories/user_session.repo.js";
-import generateTokens from "../services/jwt/generateTokens.js";
+import { generateTokens } from "../utils/jwt/generateTokens.js";
 import CONSTANTS from "../constants.js";
 import type { userI } from "../models/user.model.js";
 
@@ -38,7 +38,6 @@ async function loginUser(req: Request, res: Response): Promise<Response> {
     if (!isPasswordValid) {
       return res.status(400).json(new ApiError(400, "Invalid credentials"));
     }
-
     const deviceId = crypto.randomBytes(10).toString("hex");
     // TODO: Detect the user device type i.e mobile, browser etc
     const deviceType = "";
