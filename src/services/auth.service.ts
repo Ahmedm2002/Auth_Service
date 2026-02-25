@@ -1,6 +1,5 @@
 import userSession from "../repositories/user_session.repo.js";
 import type { userI } from "../interfaces/user.model.js";
-import type { userSessionI } from "../interfaces/user-sessions.model.js";
 import {
   loginSchema,
   signupSchema,
@@ -14,8 +13,10 @@ import crypto from "node:crypto";
 import generateTokens from "../utils/jwt/generateTokens.js";
 import type { Tokens } from "../interfaces/tokens.model.js";
 import safeUserParse from "../utils/dtoMapper/user.mapper.js";
-import type { LoginResDto } from "../dtos/auth/auth.dto.js";
+import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
 import type { SafeUserDto } from "../dtos/user/user.dto.js";
+import verificationTokens from "../repositories/verification_tokens.repo.js";
+import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 class AuthService {
   constructor() {}
   async login(
@@ -76,7 +77,38 @@ class AuthService {
     email: string
   ): Promise<ApiError | ApiResponse<SignupResDto>> {
     try {
-      return new ApiResponse(200, {});
+      const validate = signupSchema.safeParse({
+        userName: name,
+        password,
+        email,
+      });
+      if (!validate.success) {
+        console.log(validate);
+        return new ApiError(400, "Invalid inputs fields", ["Invalid fields"]);
+      }
+
+      const existingUser: userI = await User.getByEmail(email);
+      if (existingUser) {
+        return new ApiError(409, "Email already exists", []);
+      }
+
+      const password_hash = await bcrypt.hash(password, 10);
+      const newUser: userI = await User.createUser({
+        name,
+        email,
+        password_hash,
+      });
+      // TODO: Implement the email sending using queues
+      const token = await sendVerificationCode(email, name);
+      console.log("Token Send to ", newUser.email, ": ", token);
+      const token_hash = await bcrypt.hash(token, 10);
+      await verificationTokens.insert(newUser.id!, token_hash);
+      const parsedUser: SafeUserDto = safeUserParse(newUser);
+      return new ApiResponse<SignupResDto>(
+        201,
+        { user: parsedUser },
+        "User created successfully"
+      );
     } catch (error: any) {
       console.log("Error occured while signup: ", error.message);
       return new ApiError(500, CONSTANTS.SERVER_ERROR);

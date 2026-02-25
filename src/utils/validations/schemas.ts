@@ -5,7 +5,8 @@ const emailSchema = z.email({ message: "Invalid email address" });
 const passwordSchema = z
   .string()
   .trim()
-  .min(8, "Password must be at least 8 characters long");
+  .min(8, "Password must be at least 8 characters long")
+  .max(12, "Password must be of 8-12 chararcters");
 
 const userNameSchema = z.string().trim().min(3, "Invalid user name");
 

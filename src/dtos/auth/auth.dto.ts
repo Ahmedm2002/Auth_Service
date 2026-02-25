@@ -8,4 +8,6 @@ export interface LoginResDto {
   deviceId: string;
 }
 
-export interface SignupResDto {}
+export interface SignupResDto {
+  user: SafeUserDto;
+}

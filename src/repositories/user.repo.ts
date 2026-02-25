@@ -57,7 +57,9 @@ class Users {
    * @param user
    * @returns
    */
-  async createUser(user: userI): Promise<userI> {
+  async createUser(
+    user: Pick<userI, "name" | "password_hash" | "email">
+  ): Promise<userI> {
     const { name, email, password_hash } = user;
     try {
       const result: QueryResult = await pool.query(
@@ -149,20 +151,6 @@ class Users {
       await client.query("ROLLBACK");
     } finally {
       client.release();
-    }
-  }
-
-  /**
-   *
-   * @returns
-   */
-  async getAllUsers(): Promise<userI[]> {
-    try {
-      const result: QueryResult = await pool.query("SELECT * FROM users");
-      return result.rows;
-    } catch (error: any) {
-      console.log("Error fetching all users", error.message);
-      throw new Error("Error getting all users");
     }
   }
 }
