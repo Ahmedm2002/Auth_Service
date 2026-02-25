@@ -1,6 +1,6 @@
 import userSession from "../repositories/user_session.repo.js";
-import type { userI } from "../models/user.model.js";
-import type { userSessionI } from "../models/user-sessions.model.js";
+import type { userI } from "../interfaces/user.model.js";
+import type { userSessionI } from "../interfaces/user-sessions.model.js";
 import {
   loginSchema,
   signupSchema,
@@ -11,13 +11,17 @@ import User from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import CONSTANTS from "../constants.js";
 import crypto from "node:crypto";
-import { generateTokens, type Tokens } from "../utils/jwt/generateTokens.js";
-
-type LoginRes = ApiError | ApiResponse<userI & Tokens>;
-
+import generateTokens from "../utils/jwt/generateTokens.js";
+import type { Tokens } from "../interfaces/tokens.model.js";
+import safeUserParse from "../utils/dtoMapper/user.mapper.js";
+import type { LoginResDto } from "../dtos/auth/auth.dto.js";
+import type { SafeUserDto } from "../dtos/user/user.dto.js";
 class AuthService {
   constructor() {}
-  async login(email: string, password: string): Promise<LoginRes> {
+  async login(
+    email: string,
+    password: string
+  ): Promise<ApiError | ApiResponse<LoginResDto>> {
     try {
       const validate = loginSchema.safeParse({ email, password });
       if (!validate.success) {
@@ -25,7 +29,7 @@ class AuthService {
       }
       const user: userI = await User.getByEmail(email);
       if (!user) {
-        new ApiError(404, "User not found");
+        return new ApiError(404, "User not found");
       }
 
       const isPasswordValid: boolean = await bcrypt.compare(
@@ -36,22 +40,50 @@ class AuthService {
         return new ApiError(400, "Invalid credentials");
       }
 
-      const deviceId = crypto.randomBytes(10).toString("hex");
+      const deviceId: string = crypto.randomBytes(10).toString("hex");
 
       const { accessToken, refreshToken }: Tokens = generateTokens(user.id!);
       // TODO: Detect the user device type i.e mobile, browser etc
       const deviceType = "";
-      await userSession.create(user.id!, deviceId, refreshToken, deviceType);
+      const sessionId = await userSession.create(
+        user.id!,
+        deviceId,
+        refreshToken,
+        deviceType
+      );
 
-      return new ApiResponse<LoginRes>(200, {user, null}, "User saved successfully");
+      if (!sessionId) {
+        return new ApiError(
+          500,
+          "There was unexpected error creating your session. Try again later"
+        );
+      }
+      const parsedUser: SafeUserDto = safeUserParse(user);
+
+      return new ApiResponse<LoginResDto>(
+        200,
+        { user: parsedUser, accessToken, refreshToken, deviceId },
+        "User saved successfully"
+      );
     } catch (error: any) {
       console.log("Error occured while login: ", error.message);
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
-  signup() {}
+  async signup(
+    name: string,
+    password: string,
+    email: string
+  ): Promise<ApiError | ApiResponse<SignupResDto>> {
+    try {
+      return new ApiResponse(200, {});
+    } catch (error: any) {
+      console.log("Error occured while signup: ", error.message);
+      return new ApiError(500, CONSTANTS.SERVER_ERROR);
+    }
+  }
 }
 
 const authServ = new AuthService();
 
-export default authServ as AuthService
+export default authServ;

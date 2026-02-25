@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
 import CONSTANTS from "../constants.js";
-import type { userSessionI } from "../models/user-sessions.model.js";
+import type { userSessionI } from "../interfaces/user-sessions.model.js";
 
 /**
  *

@@ -5,8 +5,8 @@ import User from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
-import type { VerificationsTokenI } from "../models/verification-tokens.model.js";
-import type { userI } from "../models/user.model.js";
+import type { VerificationsTokenI } from "../interfaces/verification-tokens.model.js";
+import type { userI } from "../interfaces/user.model.js";
 import CONSTANTS from "../constants.js";
 
 async function verifyEmail(req: Request, res: Response) {

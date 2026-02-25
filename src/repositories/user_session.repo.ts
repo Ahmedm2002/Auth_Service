@@ -1,7 +1,7 @@
 import type { QueryResult } from "pg";
 import { pool } from "../configs/db.js";
 import crypto from "node:crypto";
-import type { userSessionI } from "../models/user-sessions.model.js";
+import type { userSessionI } from "../interfaces/user-sessions.model.js";
 /**
  *
  */
@@ -19,7 +19,7 @@ class UserSessions {
     deviceId: string,
     refreshToken: string,
     deviceType: string
-  ): Promise<userSessionI | null> {
+  ): Promise<Pick<userSessionI, "id"> | null> {
     if (!userId || !deviceId || !refreshToken) {
       throw new Error("Missing required session fields");
     }

@@ -1,6 +1,6 @@
 import { pool } from "../configs/db.js";
 import type { QueryResult } from "pg";
-import type { VerificationsTokenI } from "../models/verification-tokens.model.js";
+import type { VerificationsTokenI } from "../interfaces/verification-tokens.model.js";
 
 /**
  *

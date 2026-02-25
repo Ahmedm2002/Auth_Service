@@ -1,9 +1,5 @@
 import jwt from "jsonwebtoken";
-
-type Tokens = {
-  accessToken: string;
-  refreshToken: string;
-};
+import type { Tokens } from "../../interfaces/tokens.model.js";
 
 /**
  *
@@ -51,4 +47,4 @@ function generateTokens(userId: string): Tokens {
   return { accessToken, refreshToken };
 }
 
-export { generateTokens, type Tokens };
+export default generateTokens;
