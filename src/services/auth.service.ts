@@ -20,6 +20,12 @@ import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import { fromError } from "zod-validation-error";
 class AuthService {
   constructor() {}
+  /**
+   *
+   * @param email
+   * @param password
+   * @returns
+   */
   async login(
     email: string,
     password: string
@@ -68,7 +74,13 @@ class AuthService {
 
       return new ApiResponse<LoginResDto>(
         200,
-        { user: parsedUser, accessToken, refreshToken, deviceId },
+        {
+          user: parsedUser,
+          accessToken,
+          refreshToken,
+          deviceId,
+          sessionId: sessionId.id!,
+        },
         "User saved successfully"
       );
     } catch (error: any) {
@@ -76,6 +88,14 @@ class AuthService {
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
+
+  /**
+   *
+   * @param name
+   * @param password
+   * @param email
+   * @returns
+   */
   async signup(
     name: string,
     password: string,

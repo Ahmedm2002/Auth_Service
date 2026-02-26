@@ -6,6 +6,7 @@ export interface LoginResDto {
   accessToken: string;
   refreshToken: string;
   deviceId: string;
+  sessionId: string;
 }
 
 export interface SignupResDto {

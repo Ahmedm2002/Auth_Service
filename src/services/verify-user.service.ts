@@ -7,18 +7,27 @@ import type { VerificationsTokenI } from "../interfaces/verification-tokens.mode
 import bcrypt from "bcrypt";
 import CONSTANTS from "../constants.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
+import isValidEmail from "../utils/helperFuncs/isValidEmail.js";
 
 class VerifyUserService {
   constructor() {}
+  /**
+   *
+   * @param email
+   * @param code
+   * @returns
+   */
   async verifyEmail(
     email: string,
     code: string
   ): Promise<ApiError | ApiResponse<null>> {
+    if (!code || !email || code.length < 4) {
+      return new ApiError(400, "Please enter 4 verification code");
+    }
+    if (!isValidEmail(email)) {
+      return new ApiError(400, "Invalid email address");
+    }
     try {
-      if (!code || !email || code.length < 4) {
-        return new ApiError(400, "Please enter 4 verification code");
-      }
-
       const user: userI = await Users.getByEmail(email);
       if (!user) {
         return new ApiError(404, "User not found");
@@ -58,9 +67,17 @@ class VerifyUserService {
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
+  /**
+   *
+   * @param email
+   * @returns
+   */
   async resendCode(email: string): Promise<ApiError | ApiResponse<null>> {
     if (!email) {
       return new ApiError(400, "Email Required");
+    }
+    if (!isValidEmail(email)) {
+      return new ApiError(400, "Invalid email address");
     }
     try {
       const user = await Users.getByEmail(email);
@@ -84,6 +101,6 @@ class VerifyUserService {
   }
 }
 
-const VerifyUserServ = new VerifyUserService();
+const verifyUserServ = new VerifyUserService();
 
-export default VerifyUserServ;
+export default verifyUserServ;

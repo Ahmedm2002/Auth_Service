@@ -1,12 +1,12 @@
 import ApiError from "../utils/responses/ApiError.js";
 import type { Request, Response } from "express";
 import CONSTANTS from "../constants.js";
-import VerifyUserServ from "../services/verify-user.service.js";
+import verifyUserServ from "../services/verify-user.service.js";
 
 async function verifyEmail(req: Request, res: Response) {
   const { code, email } = req.body;
   try {
-    const response = await VerifyUserServ.verifyEmail(email, code);
+    const response = await verifyUserServ.verifyEmail(email, code);
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
     console.log("Error occured while verifying email: ", error.message);
@@ -17,7 +17,7 @@ async function verifyEmail(req: Request, res: Response) {
 async function resendCode(req: Request, res: Response) {
   const { email } = req.body;
   try {
-    const response = await VerifyUserServ.resendCode(email);
+    const response = await verifyUserServ.resendCode(email);
     res.status(response.statusCode).json(response);
   } catch (error: any) {
     console.log("Error while resending user's code : ", error.message);

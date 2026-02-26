@@ -51,17 +51,16 @@ class UserSessionsRepo {
   }
   /**
    *
-   * @param sessionId
+   * @param userId
    * @returns
    */
-  async delete(sessionId: string): Promise<userSessionI | null> {
-    if (!sessionId) throw new Error("Session id required");
+  async deleteAllSessions(userId: string): Promise<string[]> {
     try {
-      const result: QueryResult<userSessionI> = await pool.query(
+      const result: QueryResult = await pool.query(
         "delete from user_sessions where id = $1 returning id",
-        [sessionId]
+        [userId]
       );
-      return result.rows[0] ?? null;
+      return result.rows;
     } catch (error: any) {
       console.log("Error occured deleting user session: ", error.message);
       throw new Error("Error occured during deleting user session");
@@ -86,11 +85,14 @@ class UserSessionsRepo {
     }
   }
 
-  async deleteUserSession(sessionId: string): Promise<string> {
+  async deleteUserSession(
+    sessionId: string,
+    deviceId: string
+  ): Promise<string> {
     try {
       const result: QueryResult = await pool.query(
-        "Delete from user_sessions where id = $1 returning id",
-        [sessionId]
+        "Delete from user_sessions where id = $1 and device_id = $2 returning id",
+        [sessionId, deviceId]
       );
       return result.rows[0];
     } catch (error: any) {
