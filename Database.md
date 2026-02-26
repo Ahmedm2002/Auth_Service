@@ -23,6 +23,8 @@ This table stores the information of the users
 
 ### user_sessions
 
+z
+
 ### email_verification_tokens
 
 ## Indexes

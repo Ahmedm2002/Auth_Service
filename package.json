@@ -21,7 +21,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "npx tsc",
     "dev": "nodemon --exec tsx src/index.ts",
     "start": "npx tsc && node dist/src/index.js"
