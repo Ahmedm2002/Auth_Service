@@ -1,0 +1,10 @@
+import { loginUser, signupUser } from "../controllers/auth.controller.js";
+import { Router } from "express";
+import rateLimiter from "../middlewares/rateLimitter.middleware.js";
+
+const router: Router = Router();
+
+router.post("/login", rateLimiter.authLimiter, loginUser);
+router.post("/signup", rateLimiter.signupLimiter, signupUser);
+
+export default router;
