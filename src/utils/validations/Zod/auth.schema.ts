@@ -3,7 +3,7 @@ import { emailSchema, passwordSchema, userNameSchema } from "../schemas.js";
 import { createErrorMap } from "zod-validation-error";
 
 z.config({
-  customError: createErrorMap,
+  customError: createErrorMap(),
 });
 
 const signupSchema = z.object({

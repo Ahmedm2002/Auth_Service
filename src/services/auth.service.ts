@@ -17,6 +17,7 @@ import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
 import type { SafeUserDto } from "../dtos/user/user.dto.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
+import { fromError, ValidationError } from "zod-validation-error";
 class AuthService {
   constructor() {}
   async login(
@@ -83,8 +84,11 @@ class AuthService {
         email,
       });
       if (!validate.success) {
-        console.log(validate);
-        return new ApiError(400, "Invalid inputs fields", ["Invalid fields"]);
+        let validationError = fromError(validate.error);
+
+        return new ApiError(400, "Invalid inputs fields", [
+          validationError.message,
+        ]);
       }
 
       const existingUser: userI = await User.getByEmail(email);
