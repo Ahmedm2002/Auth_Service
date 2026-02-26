@@ -27,7 +27,8 @@ class AuthService {
     try {
       const validate = loginSchema.safeParse({ email, password });
       if (!validate.success) {
-        return new ApiError(400, "Invalid fields");
+        const vaildationError = fromError(validate.error);
+        return new ApiError(400, "Invalid fields", [vaildationError.message]);
       }
       const user: userI = await User.getByEmail(email);
       if (!user) {
