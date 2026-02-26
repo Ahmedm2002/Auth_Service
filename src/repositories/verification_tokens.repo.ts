@@ -5,7 +5,7 @@ import type { VerificationsTokenI } from "../interfaces/verification-tokens.mode
 /**
  *
  */
-class VerificationsToken {
+class VerificationsTokenRepo {
   constructor() {}
   /**
    *
@@ -49,6 +49,6 @@ class VerificationsToken {
   }
 }
 
-const verificationTokens = new VerificationsToken();
+const VerificationTokens = new VerificationsTokenRepo();
 
-export default verificationTokens as VerificationsToken;
+export default VerificationTokens;

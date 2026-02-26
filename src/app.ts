@@ -1,5 +1,5 @@
 import express, { type Express } from "express";
-import router from "./routes/index.js";
+import router from "./router/v1/index.js";
 import dotenv from "dotenv";
 import ApiResponse from "./utils/responses/ApiResponse.js";
 import transport from "./configs/nodemailer.js";
@@ -28,11 +28,5 @@ app.get(`/api/${apiVersion}`, (req, res) => {
       )
     );
 });
-// app.all("*", (req: Request, res: Response) => {
-//   return res.status(404).json(new ApiError(404, "Route not found"));
-// });
 
-// app.all("*", (req, res) => {
-//   return res.status(404).json(new ApiError(404, "Route not found"));
-// });
 export { app };

@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   resendCode,
   verifyEmail,
-} from "../controllers/verfiyUser.controller.js";
+} from "../../controllers/verfiyUser.controller.js";
 
 const router: Router = Router();
 

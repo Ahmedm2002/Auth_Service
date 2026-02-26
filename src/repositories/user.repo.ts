@@ -5,7 +5,7 @@ import type { QueryResult } from "pg";
 /**
  *
  */
-class Users {
+class UsersRepo {
   constructor() {}
 
   whiteListedCols: string[] = [
@@ -155,5 +155,5 @@ class Users {
   }
 }
 
-const user = new Users();
-export default user as Users;
+const Users = new UsersRepo();
+export default Users;

@@ -5,7 +5,7 @@ import type { userSessionI } from "../interfaces/user-sessions.model.js";
 /**
  *
  */
-class UserSessions {
+class UserSessionsRepo {
   constructor() {}
   /**
    *
@@ -24,6 +24,7 @@ class UserSessions {
       throw new Error("Missing required session fields");
     }
 
+    // Hash the referesh token and save to database
     const refreshTokenHash = crypto
       .createHash("sha256")
       .update(refreshToken)
@@ -99,6 +100,6 @@ class UserSessions {
   }
 }
 
-const userSession = new UserSessions();
+const UserSession = new UserSessionsRepo();
 
-export default userSession;
+export default UserSession;

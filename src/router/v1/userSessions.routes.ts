@@ -1,7 +1,7 @@
 import {
   getAllSessions,
   invalidateSession,
-} from "../controllers/userSessions.controller.js";
+} from "../../controllers/userSessions.controller.js";
 import { Router } from "express";
 
 const router: Router = Router();

@@ -18,10 +18,11 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   refresh_token TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  device_type TEXT DEFAULT ''
 );
 
 create table if not exists email_verification_tokens(
-  id UUID primary key default gen_random_uuid(),
+  id UUID PRIMARY KEY default gen_random_uuid(),
   user_id uuid not null unique references users(id) on delete cascade,
   token_hash text not null,
   used_at TIMESTAMPTZ default null,
@@ -30,5 +31,8 @@ create table if not exists email_verification_tokens(
 ) 
 
 create table if not exists password_recovery_tokens(
-  id UUID primary key default gen_random_uuid()
+  id UUID PRIMARY KEY default gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 )

@@ -6,7 +6,7 @@ import {
 } from "../utils/validations/Zod/auth.schema.js";
 import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
-import User from "../repositories/user.repo.js";
+import Users from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import CONSTANTS from "../constants.js";
 import crypto from "node:crypto";
@@ -17,20 +17,23 @@ import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
 import type { SafeUserDto } from "../dtos/user/user.dto.js";
 import verificationTokens from "../repositories/verification_tokens.repo.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
-import { fromError, ValidationError } from "zod-validation-error";
+import { fromError } from "zod-validation-error";
 class AuthService {
   constructor() {}
   async login(
     email: string,
     password: string
   ): Promise<ApiError | ApiResponse<LoginResDto>> {
+    if (!email || !password) {
+      return new ApiError(400, "Email and Password required");
+    }
     try {
       const validate = loginSchema.safeParse({ email, password });
       if (!validate.success) {
         const vaildationError = fromError(validate.error);
         return new ApiError(400, "Invalid fields", [vaildationError.message]);
       }
-      const user: userI = await User.getByEmail(email);
+      const user: userI = await Users.getByEmail(email);
       if (!user) {
         return new ApiError(404, "User not found");
       }
@@ -92,13 +95,13 @@ class AuthService {
         ]);
       }
 
-      const existingUser: userI = await User.getByEmail(email);
+      const existingUser: userI = await Users.getByEmail(email);
       if (existingUser) {
         return new ApiError(409, "Email already exists", []);
       }
 
       const password_hash = await bcrypt.hash(password, 10);
-      const newUser: userI = await User.createUser({
+      const newUser: userI = await Users.createUser({
         name,
         email,
         password_hash,
