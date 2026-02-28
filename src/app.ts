@@ -1,5 +1,5 @@
 import express, { type Express } from "express";
-import router from "./router/v1/index.js";
+import v1Router from "./router/v1/index.js";
 import dotenv from "dotenv";
 import ApiResponse from "./utils/responses/ApiResponse.js";
 import transport from "./configs/nodemailer.js";
@@ -15,9 +15,9 @@ app.use(helmet());
 
 transport.verify();
 app.use(express.json());
-app.use(`/api/${apiVersion}`, router);
+app.use(`/api/`, v1Router);
 
-app.get(`/api/${apiVersion}`, (req, res) => {
+app.get("/api/", (req, res) => {
   return res
     .status(200)
     .json(

@@ -1,5 +1,9 @@
 import transport from "../../configs/nodemailer.js";
 
-async function sendPasswordResetEmail() {}
+/**
+ *
+ * @param email
+ */
+async function sendPasswordResetEmail(email: string) {}
 
 export default sendPasswordResetEmail;

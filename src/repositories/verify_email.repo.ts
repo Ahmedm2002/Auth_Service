@@ -1,11 +1,11 @@
 import { pool } from "../configs/db.js";
 import type { QueryResult } from "pg";
-import type { VerificationsTokenI } from "../interfaces/verification-tokens.model.js";
+import type { EmailVerificationI } from "../interfaces/email-verification.model.js";
 
 /**
  *
  */
-class VerificationsTokenRepo {
+class EmailVerificatioRepo {
   constructor() {}
   /**
    *
@@ -35,7 +35,7 @@ class VerificationsTokenRepo {
    * @param userId
    * @returns
    */
-  async getUserCode(userId: string): Promise<VerificationsTokenI> {
+  async getUserCode(userId: string): Promise<EmailVerificationI> {
     try {
       const result: QueryResult = await pool.query(
         "Select id, token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
@@ -49,6 +49,6 @@ class VerificationsTokenRepo {
   }
 }
 
-const VerificationTokens = new VerificationsTokenRepo();
+const emaiVerification = new EmailVerificatioRepo();
 
-export default VerificationTokens;
+export default emaiVerification;

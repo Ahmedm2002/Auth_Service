@@ -5,8 +5,8 @@ import sessionRoutes from "./userSessions.routes.js";
 
 const router: Router = Router();
 
-router.use("/auth", authRoutes);
-router.use("/verify", verficationRoutes);
-router.use("/user-session", sessionRoutes);
+router.use("v1/auth", authRoutes);
+router.use("v1/verify", verficationRoutes);
+router.use("v1/user-session", sessionRoutes);
 
 export default router;

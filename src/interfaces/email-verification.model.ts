@@ -1,4 +1,4 @@
-export interface VerificationsTokenI {
+export interface EmailVerificationI {
   id: string;
   user_id: string;
   used_at: string;

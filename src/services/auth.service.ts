@@ -15,7 +15,8 @@ import type { Tokens } from "../interfaces/tokens.model.js";
 import safeUserParse from "../utils/dtoMapper/user.mapper.js";
 import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
 import type { SafeUserDto } from "../dtos/user/user.dto.js";
-import verificationTokens from "../repositories/verification_tokens.repo.js";
+import emaiVerification from "../repositories/verify_email.repo.js";
+("../repositories/verification_tokens.repo.js");
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import { fromError } from "zod-validation-error";
 class AuthService {
@@ -130,7 +131,7 @@ class AuthService {
       const token = await sendVerificationCode(email, name);
       console.log("Token Send to ", newUser.email, ": ", token);
       const token_hash = await bcrypt.hash(token, 10);
-      await verificationTokens.insert(newUser.id!, token_hash);
+      await emaiVerification.insert(newUser.id!, token_hash);
       const parsedUser: SafeUserDto = safeUserParse(newUser);
       return new ApiResponse<SignupResDto>(
         201,

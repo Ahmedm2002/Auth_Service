@@ -1,7 +1,7 @@
 import ApiError from "../utils/responses/ApiError.js";
 import type { Request, Response } from "express";
 import CONSTANTS from "../constants.js";
-import verifyUserServ from "../services/verify-user.service.js";
+import verifyUserServ from "../services/verify-email.service.js";
 
 async function verifyEmail(req: Request, res: Response) {
   const { code, email } = req.body;
