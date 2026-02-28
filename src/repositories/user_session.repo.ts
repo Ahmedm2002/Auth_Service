@@ -100,6 +100,18 @@ class UserSessionsRepo {
       throw new Error("Error deleting user session");
     }
   }
+  async getSession(userId: string, sessionId: string): Promise<userSessionI> {
+    try {
+      const session: QueryResult = await pool.query(
+        "SELECT id , user_id, refresh_token, expires_at, device_id from user_sessions where id = $1 AND user_id = $2",
+        [sessionId, userId]
+      );
+      return session.rows[0];
+    } catch (error: any) {
+      console.log("Error deleting user session", error.message);
+      throw new Error("Error retreiveng user session");
+    }
+  }
 }
 
 const UserSession = new UserSessionsRepo();

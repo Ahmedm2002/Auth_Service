@@ -47,4 +47,21 @@ function generateTokens(userId: string): Tokens {
   return { accessToken, refreshToken };
 }
 
-export default generateTokens;
+function generateAccessToken(userId: string): string {
+  const accessSecret = process.env.JWT_ACCESS_SECRET!;
+  const accessToken = jwt.sign(
+    {
+      sub: userId,
+      type: "access",
+    },
+    accessSecret,
+    {
+      expiresIn: "15m",
+      issuer: "auth-service",
+      audience: "user",
+    }
+  );
+  return accessToken;
+}
+
+export { generateTokens, generateAccessToken };

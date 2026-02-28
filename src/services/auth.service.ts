@@ -10,7 +10,7 @@ import Users from "../repositories/user.repo.js";
 import bcrypt from "bcrypt";
 import CONSTANTS from "../constants.js";
 import crypto from "node:crypto";
-import generateTokens from "../utils/jwt/generateTokens.js";
+import { generateTokens } from "../utils/jwt/generateTokens.js";
 import type { Tokens } from "../interfaces/tokens.model.js";
 import safeUserParse from "../utils/dtoMapper/user.mapper.js";
 import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
