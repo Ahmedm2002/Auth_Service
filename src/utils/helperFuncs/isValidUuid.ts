@@ -1,8 +1,8 @@
 import uuidSchema from "../validations/Zod/uuid.schema.js";
 /**
  *
- * @param uuid
- * @returns
+ * @param {string} uuid
+ * @returns {boolean} returns true if the uuid is valid
  */
 function isValidUuid(uuid: string): boolean {
   return uuidSchema.safeParse(uuid).success;

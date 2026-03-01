@@ -12,13 +12,14 @@ class UserSessionsRepo {
    * @param userId
    * @param deviceId
    * @param refreshToken
+   * @param deviceType
    * @returns
    */
   async create(
     userId: string,
     deviceId: string,
     refreshToken: string,
-    deviceType: string
+    deviceType: string,
   ): Promise<Pick<userSessionI, "id"> | null> {
     if (!userId || !deviceId || !refreshToken) {
       throw new Error("Missing required session fields");
@@ -37,14 +38,14 @@ class UserSessionsRepo {
         VALUES ($1, $2, now() + interval '7 days', $3, $4)
         RETURNING id
         `,
-        [userId, deviceId, refreshTokenHash, deviceType]
+        [userId, deviceId, refreshTokenHash, deviceType],
       );
 
       return result.rows[0] ?? null;
     } catch (error: any) {
       console.log(
         "Error occured while registering user session: ",
-        error.message
+        error.message,
       );
       throw new Error("Error while registering user session: ", error.message);
     }
@@ -58,7 +59,7 @@ class UserSessionsRepo {
     try {
       const result: QueryResult = await pool.query(
         "delete from user_sessions where id = $1 returning id",
-        [userId]
+        [userId],
       );
       return result.rows;
     } catch (error: any) {
@@ -76,7 +77,7 @@ class UserSessionsRepo {
     try {
       const session: QueryResult<userSessionI> = await pool.query(
         "select * from user_sessions where user_id = $1",
-        [userId]
+        [userId],
       );
       return session.rows ?? null;
     } catch (error: any) {
@@ -87,12 +88,12 @@ class UserSessionsRepo {
 
   async deleteUserSession(
     sessionId: string,
-    deviceId: string
+    deviceId: string,
   ): Promise<string> {
     try {
       const result: QueryResult = await pool.query(
         "Delete from user_sessions where id = $1 and device_id = $2 returning id",
-        [sessionId, deviceId]
+        [sessionId, deviceId],
       );
       return result.rows[0];
     } catch (error: any) {
@@ -104,7 +105,7 @@ class UserSessionsRepo {
     try {
       const session: QueryResult = await pool.query(
         "SELECT id , user_id, refresh_token, expires_at, device_id from user_sessions where id = $1 AND user_id = $2",
-        [sessionId, userId]
+        [sessionId, userId],
       );
       return session.rows[0];
     } catch (error: any) {

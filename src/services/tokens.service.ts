@@ -10,11 +10,19 @@ import { generateAccessToken } from "../utils/jwt/generateTokens.js";
 type AccessToken = { accessToken: string };
 class Tokens {
   constructor() {}
+  /**
+   *
+   * @param refreshToken
+   * @param userId
+   * @param deviceId
+   * @param sessionId
+   * @returns
+   */
   async generateAccessToken(
     refreshToken: string,
     userId: string,
     deviceId: string,
-    sessionId: string
+    sessionId: string,
   ): Promise<ApiError | ApiResponse<AccessToken>> {
     if (!refreshToken || !userId || !deviceId || !sessionId) {
       return new ApiError(400, "Bad Request, Required fields are empty");
@@ -35,12 +43,14 @@ class Tokens {
         return new ApiError(404, "No session found");
       }
       // check if the refresh token has not expired
-      const currentTime = Date.now();
-      // if()
-      // compare refre  sh token hash
+
+      // const currentTime = Date.now();
+      // if (true) {
+      // }
+      // compare refresh token hash in the db
       const isValidToken = await bcrpty.compare(
         refreshToken,
-        process.env.JWT_REFRESH_SECRET!
+        process.env.JWT_REFRESH_SECRET!,
       );
 
       if (!isValidToken) {
@@ -50,11 +60,10 @@ class Tokens {
       const token = generateAccessToken(userId);
 
       // send it to user
-
       return new ApiResponse<AccessToken>(
         200,
         { accessToken: token },
-        "Access token generated successfully"
+        "Access token generated successfully",
       );
     } catch (error: any) {
       console.log("Error occured while generated new access token for user");

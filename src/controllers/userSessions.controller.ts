@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import CONSTANTS from "../constants.js";
 import userSessionServ from "../services/user-session.service.js";
+import tokensServ from "../services/tokens.service.js";
 /**
  *
  * @param req
@@ -30,7 +31,7 @@ async function invalidateSession(req: Request, res: Response) {
   try {
     const response = await userSessionServ.invalidateSession(
       sessionId,
-      deviceId
+      deviceId,
     );
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
@@ -50,4 +51,20 @@ async function logOutAllDevices(req: Request, res: Response) {
   }
 }
 
-export { getAllSessions, invalidateSession, logOutAllDevices };
+async function getAccessToken(req: Request, res: Response) {
+  const { refreshToken, userId, deviceId, sessionId } = req.body;
+  try {
+    const response = await tokensServ.generateAccessToken(
+      refreshToken,
+      userId,
+      deviceId,
+      sessionId,
+    );
+    return res.status(response.statusCode).json(response);
+  } catch (error: any) {
+    console.log("Error while creating access token: ", error.message);
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
+  }
+}
+
+export { getAllSessions, invalidateSession, getAccessToken, logOutAllDevices };

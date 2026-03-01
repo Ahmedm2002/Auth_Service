@@ -28,7 +28,7 @@ function generateTokens(userId: string): Tokens {
       expiresIn: "15m",
       issuer: "auth-service",
       audience: "user",
-    }
+    },
   );
 
   const refreshToken = jwt.sign(
@@ -41,7 +41,7 @@ function generateTokens(userId: string): Tokens {
       expiresIn: "7d",
       issuer: "auth-service",
       audience: "user",
-    }
+    },
   );
 
   return { accessToken, refreshToken };
@@ -59,7 +59,7 @@ function generateAccessToken(userId: string): string {
       expiresIn: "15m",
       issuer: "auth-service",
       audience: "user",
-    }
+    },
   );
   return accessToken;
 }
