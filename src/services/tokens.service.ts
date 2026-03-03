@@ -4,7 +4,7 @@ import isValidUuid from "../utils/helperFuncs/isValidUuid.js";
 import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
 import UserSession from "../repositories/user_session.repo.js";
-import bcrpty from "bcrypt";
+import bcrypt from "bcrypt";
 import { generateAccessToken } from "../utils/jwt/generateTokens.js";
 
 type AccessToken = { accessToken: string };
@@ -48,11 +48,11 @@ class Tokens {
       // if (true) {
       // }
       // compare refresh token hash in the db
-      const isValidToken = await bcrpty.compare(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET!,
-      );
 
+      const isValidToken = await bcrypt.compare(
+        refreshToken,
+        session.refresh_token!,
+      );
       if (!isValidToken) {
         return new ApiError(400, "Invalid refresh Token");
       }

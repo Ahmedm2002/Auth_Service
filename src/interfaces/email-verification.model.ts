@@ -6,4 +6,5 @@ export interface EmailVerificationI {
   token_hash: string;
   created_at: string;
   revoked_at: string;
+  expires_at: string;
 }

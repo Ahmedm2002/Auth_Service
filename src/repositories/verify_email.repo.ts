@@ -18,14 +18,14 @@ class EmailVerificatioRepo {
 
     try {
       const response: QueryResult = await pool.query(
-        "INSERT INTO email_verification_tokens (user_id, token_hash) VALUES ($1, $2) on conflict(user_id) do update set token_hash = $2 RETURNING id",
-        [userId, token]
+        "INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES ($1, $2) on conflict(user_id) do update set token_hash = $2 RETURNING id",
+        [userId, token, "NOW() + 5m"],
       );
       return response.rows[0] || null;
     } catch (error: any) {
       console.log(
         "Error while inserting token into verificationsTable",
-        error.message
+        error.message,
       );
       throw new Error("Error adding verification token");
     }
@@ -38,8 +38,8 @@ class EmailVerificatioRepo {
   async getUserCode(userId: string): Promise<EmailVerificationI> {
     try {
       const result: QueryResult = await pool.query(
-        "Select id, token_hash , used_at, created_at, revoked_at from email_verification_tokens where user_id = $1",
-        [userId]
+        "Select id, token_hash , used_at, created_at, revoked_at, expires_at from email_verification_tokens where user_id = $1",
+        [userId],
       );
       return result.rows[0];
     } catch (error) {

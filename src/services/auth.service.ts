@@ -29,7 +29,7 @@ class AuthService {
    */
   async login(
     email: string,
-    password: string
+    password: string,
   ): Promise<ApiError | ApiResponse<LoginResDto>> {
     if (!email || !password) {
       return new ApiError(400, "Email and Password required");
@@ -47,7 +47,7 @@ class AuthService {
 
       const isPasswordValid: boolean = await bcrypt.compare(
         password,
-        user.password_hash
+        user.password_hash,
       );
       if (!isPasswordValid) {
         return new ApiError(400, "Invalid credentials");
@@ -58,17 +58,18 @@ class AuthService {
       const { accessToken, refreshToken }: Tokens = generateTokens(user.id!);
       // TODO: Detect the user device type i.e mobile, browser etc
       const deviceType = "";
+      const refreshTokenHash = await bcrypt.hash(refreshToken, 5);
       const sessionId = await userSession.create(
         user.id!,
         deviceId,
-        refreshToken,
-        deviceType
+        refreshTokenHash,
+        deviceType,
       );
 
       if (!sessionId) {
         return new ApiError(
           500,
-          "There was unexpected error creating your session. Try again later"
+          "There was unexpected error creating your session. Try again later",
         );
       }
       const parsedUser: SafeUserDto = safeUserParse(user);
@@ -82,7 +83,7 @@ class AuthService {
           deviceId,
           sessionId: sessionId.id!,
         },
-        "User saved successfully"
+        "User saved successfully",
       );
     } catch (error: any) {
       console.log("Error occured while login: ", error.message);
@@ -100,7 +101,7 @@ class AuthService {
   async signup(
     name: string,
     password: string,
-    email: string
+    email: string,
   ): Promise<ApiError | ApiResponse<SignupResDto>> {
     try {
       const validate = signupSchema.safeParse({
@@ -136,7 +137,7 @@ class AuthService {
       return new ApiResponse<SignupResDto>(
         201,
         { user: parsedUser },
-        "User created successfully"
+        "User created successfully",
       );
     } catch (error: any) {
       console.log("Error occured while signup: ", error.message);

@@ -1,6 +1,27 @@
 import pino from "pino";
-import PinoHttp from "pino-http";
 
-const Logger = pino();
+const logger = pino({
+  level: process.env.LOG_LEVEL || "info",
 
-export default Logger;
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+    },
+  },
+  base: {
+    pid: true,
+  },
+  redact: {
+    paths: [
+      "password",
+      "authorization",
+      "cookie",
+      "headers.authorization",
+      "headers.cookie",
+      "email",
+    ],
+  },
+});
+
+export default logger;

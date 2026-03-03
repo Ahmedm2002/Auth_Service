@@ -19,7 +19,7 @@ class VerifyUserService {
    */
   async verifyEmail(
     email: string,
-    code: string
+    code: string,
   ): Promise<ApiError | ApiResponse<null>> {
     if (!code || !email || code.length < 4) {
       return new ApiError(400, "Please enter 4 verification code");
@@ -33,12 +33,12 @@ class VerifyUserService {
         return new ApiError(404, "User not found");
       }
       const token: EmailVerificationI = await emaiVerification.getUserCode(
-        user.id!
+        user.id!,
       );
       if (!token) {
         return new ApiError(
           404,
-          "No code found. Please signup or send click resend token"
+          "No code found. Please signup or send click resend token",
         );
       }
 

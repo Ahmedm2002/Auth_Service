@@ -18,18 +18,12 @@ class UserSessionsRepo {
   async create(
     userId: string,
     deviceId: string,
-    refreshToken: string,
+    refreshTokenHash: string,
     deviceType: string,
   ): Promise<Pick<userSessionI, "id"> | null> {
-    if (!userId || !deviceId || !refreshToken) {
+    if (!userId || !deviceId || !refreshTokenHash) {
       throw new Error("Missing required session fields");
     }
-
-    // Hash the referesh token and save to database
-    const refreshTokenHash = crypto
-      .createHash("sha256")
-      .update(refreshToken)
-      .digest("hex");
 
     try {
       const result: QueryResult<userSessionI> = await pool.query(
@@ -58,7 +52,7 @@ class UserSessionsRepo {
   async deleteAllSessions(userId: string): Promise<string[]> {
     try {
       const result: QueryResult = await pool.query(
-        "delete from user_sessions where id = $1 returning id",
+        "delete from user_sessions where user_id = $1 returning id",
         [userId],
       );
       return result.rows;
