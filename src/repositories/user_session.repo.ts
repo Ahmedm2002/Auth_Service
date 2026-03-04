@@ -70,7 +70,7 @@ class UserSessionsRepo {
   async getAll(userId: string): Promise<userSessionI[]> {
     try {
       const session: QueryResult<userSessionI> = await pool.query(
-        "select * from user_sessions where user_id = $1",
+        "select * from user_sessions where user_id = $1 and expires_at > NOW()",
         [userId],
       );
       return session.rows ?? null;

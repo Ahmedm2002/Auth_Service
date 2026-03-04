@@ -16,9 +16,9 @@ import safeUserParse from "../utils/dtoMapper/user.mapper.js";
 import type { LoginResDto, SignupResDto } from "../dtos/auth/auth.dto.js";
 import type { SafeUserDto } from "../dtos/user/user.dto.js";
 import emaiVerification from "../repositories/verify_email.repo.js";
-("../repositories/verification_tokens.repo.js");
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import { fromError } from "zod-validation-error";
+import logger from "../utils/logger/logger.js";
 class AuthService {
   constructor() {}
   /**
@@ -32,6 +32,7 @@ class AuthService {
     password: string,
   ): Promise<ApiError | ApiResponse<LoginResDto>> {
     if (!email || !password) {
+      logger.warn("Empty value in fields");
       return new ApiError(400, "Email and Password required");
     }
     try {
@@ -103,6 +104,9 @@ class AuthService {
     password: string,
     email: string,
   ): Promise<ApiError | ApiResponse<SignupResDto>> {
+    if (!name || !password || !email) {
+      return new ApiError(400, "Missing input fields");
+    }
     try {
       const validate = signupSchema.safeParse({
         userName: name,
@@ -111,7 +115,6 @@ class AuthService {
       });
       if (!validate.success) {
         let validationError = fromError(validate.error);
-
         return new ApiError(400, "Invalid inputs fields", [
           validationError.message,
         ]);

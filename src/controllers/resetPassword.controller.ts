@@ -14,7 +14,7 @@ async function resetPassword(req: Request, res: Response) {
     const response = await resetPasswordServ.resetPassword(
       email,
       password,
-      confirmPassword
+      confirmPassword,
     );
     res.status(response.statusCode).json(response);
   } catch (error: any) {
@@ -31,13 +31,13 @@ async function resetPassword(req: Request, res: Response) {
  */
 async function requestResetPassword(req: Request, res: Response) {
   const { email } = req.body;
-  const response = await resetPasswordServ.requestPasswordReset(email);
-  res.status(response.statusCode).json(response);
   try {
+    const response = await resetPasswordServ.requestPasswordReset(email);
+    res.status(response.statusCode).json(response);
   } catch (error: any) {
     console.log(
       "Error occured while user requested for reset password: ",
-      error.message
+      error.message,
     );
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }

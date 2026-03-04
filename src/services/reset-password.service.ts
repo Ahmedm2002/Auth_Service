@@ -14,7 +14,7 @@ class ResetPasswordService {
    * @returns
    */
   async requestPasswordReset(
-    email: string
+    email: string,
   ): Promise<ApiError | ApiResponse<null>> {
     if (!isValidEmail(email)) {
       return new ApiError(400, "Invalid email address");
@@ -30,7 +30,7 @@ class ResetPasswordService {
     } catch (error: any) {
       console.log(
         "Error sending reset password email to user: ",
-        error.message
+        error.message,
       );
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
@@ -46,7 +46,7 @@ class ResetPasswordService {
   async resetPassword(
     email: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
   ): Promise<ApiError | ApiResponse<null>> {
     if (!email || !password || !confirmPassword) {
       return new ApiError(400, "Email and password required");
@@ -71,7 +71,7 @@ class ResetPasswordService {
     } catch (error: any) {
       console.log(
         "Error sending reset password email to user: ",
-        error.message
+        error.message,
       );
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }

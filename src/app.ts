@@ -18,8 +18,8 @@ app.use(express.static("public/"));
 app.use(helmet());
 
 transport.verify();
-app.use(express.json());
-app.use(httpLoger);
+app.use(express.json({ limit: "16kb" }));
+// app.use(httpLoger);
 app.use(`/api`, v1Router);
 
 app.get("/api/", (req, res) => {
