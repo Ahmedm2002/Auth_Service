@@ -4,7 +4,7 @@ export interface EmailVerificationI {
   used_at: string;
   device_id: string;
   token_hash: string;
-  created_at: string;
-  revoked_at: string;
-  expires_at: string;
+  created_at: Date;
+  revoked_at: Date;
+  expires_at: Date;
 }

@@ -43,10 +43,13 @@ class Tokens {
         return new ApiError(404, "No session found");
       }
       // check if the refresh token has not expired
+      const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
-      // const currentTime = Date.now();
-      // if (true) {
-      // }
+      const currentTimeMS = Date.now();
+      const tokenExpiryDateMS = new Date(session.expires_at!).getTime();
+      if (currentTimeMS > tokenExpiryDateMS) {
+        return new ApiError(400, "Refresh token expired");
+      }
       // compare refresh token hash in the db
 
       const isValidToken = await bcrypt.compare(

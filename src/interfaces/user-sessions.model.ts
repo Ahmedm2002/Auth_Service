@@ -4,6 +4,6 @@ export interface userSessionI {
   device_id?: string;
   device_type?: string;
   refresh_token?: string;
-  expires_in?: string;
+  expires_at?: Date;
   user_agent?: string;
 }

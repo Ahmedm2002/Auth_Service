@@ -1,7 +1,7 @@
 export interface PasswordResetI {
   id: string;
   user_id: string;
-  created_at: string;
-  used_at?: string;
-  expires_in: string;
+  created_at: Date;
+  used_at?: Date;
+  expires_at: Date;
 }
