@@ -5,7 +5,7 @@ import type { EmailVerificationI } from "../interfaces/email-verification.model.
 /**
  *
  */
-class EmailVerificatioRepo {
+class EmailVerificationRepo {
   constructor() {}
   /**
    *
@@ -49,6 +49,6 @@ class EmailVerificatioRepo {
   }
 }
 
-const emaiVerification = new EmailVerificatioRepo();
+const emaiVerification = new EmailVerificationRepo();
 
 export default emaiVerification;

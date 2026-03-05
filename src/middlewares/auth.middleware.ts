@@ -1,11 +1,13 @@
 import type { Request, Response, NextFunction } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import jwt from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import CONSTANTS from "../constants.js";
 
 async function authenticateUser(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const authHeader = req.headers?.["authorization"] || null;
 
@@ -17,16 +19,17 @@ async function authenticateUser(
     return res.status(401).json(new ApiError(401, "Access token required"));
   }
   try {
-    const docoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    console.log("User verified");
+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
+    console.log("User verified", decoded);
     next();
   } catch (error: any) {
-    console.log("Error verify user's token: ", error.message);
-    return res
-      .status(500)
-      .json(
-        new ApiError(500, "Operation failed at our end. Please try again later")
-      );
+    if (
+      error instanceof JsonWebTokenError ||
+      error instanceof TokenExpiredError
+    ) {
+      return res.status(401).json(new ApiError(401, "Token expired"));
+    }
+    return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
 
