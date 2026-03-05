@@ -29,10 +29,10 @@ async function resetPassword(req: Request, res: Response) {
  * @param res
  * @returns
  */
-async function requestResetPassword(req: Request, res: Response) {
+async function forgotPassword(req: Request, res: Response) {
   const { email } = req.body;
   try {
-    const response = await resetPasswordServ.requestPasswordReset(email);
+    const response = await resetPasswordServ.forgotPassword(email);
     res.status(response.statusCode).json(response);
   } catch (error: any) {
     console.log(
@@ -43,4 +43,4 @@ async function requestResetPassword(req: Request, res: Response) {
   }
 }
 
-export { resetPassword, requestResetPassword };
+export { resetPassword, forgotPassword };

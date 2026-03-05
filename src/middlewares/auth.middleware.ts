@@ -1,7 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import ApiError from "../utils/responses/ApiError.js";
-import jwt from "jsonwebtoken";
-import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import CONSTANTS from "../constants.js";
 
 async function authenticateUser(
@@ -24,8 +23,8 @@ async function authenticateUser(
     next();
   } catch (error: any) {
     if (
-      error instanceof JsonWebTokenError ||
-      error instanceof TokenExpiredError
+      error instanceof jwt.JsonWebTokenError ||
+      error instanceof jwt.TokenExpiredError
     ) {
       return res.status(401).json(new ApiError(401, "Token expired"));
     }
