@@ -9,12 +9,13 @@ import resetPasswordServ from "../services/reset-password.service.js";
  * @param res
  */
 async function resetPassword(req: Request, res: Response) {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password, confirmPassword, token } = req.body;
   try {
     const response = await resetPasswordServ.resetPassword(
       email,
       password,
       confirmPassword,
+      token,
     );
     res.status(response.statusCode).json(response);
   } catch (error: any) {

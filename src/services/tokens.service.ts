@@ -24,6 +24,17 @@ class Tokens {
     deviceId: string,
     sessionId: string,
   ): Promise<ApiError | ApiResponse<AccessToken>> {
+    // Implemented
+    // check all fields are in the body
+    // is uuid valid check
+    // check if user exists
+    // retrieve its token by device id and user id
+    // check if the session exists
+    // check if the refresh token has not expired
+    // compare refresh token hash in the db
+    // generate new access token
+    // send new access token to user
+
     if (!refreshToken || !userId || !deviceId || !sessionId) {
       return new ApiError(400, "Bad Request, Required fields are empty");
     }
@@ -31,18 +42,14 @@ class Tokens {
       return new ApiError(400, "Invalid user id");
     }
     try {
-      // check if user exists
       const user = await Users.getById(userId);
       if (!user) {
         return new ApiError(404, "User not found");
       }
-      // retrieve its token by device id and user id
       const session = await UserSession.getSession(userId, sessionId);
-      // check if th session exists
       if (!session) {
         return new ApiError(404, "No session found");
       }
-      // check if the refresh token has not expired
       const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
       const currentTimeMS = Date.now();
@@ -50,7 +57,6 @@ class Tokens {
       if (currentTimeMS > tokenExpiryDateMS) {
         return new ApiError(400, "Refresh token expired");
       }
-      // compare refresh token hash in the db
 
       const isValidToken = await bcrypt.compare(
         refreshToken,
@@ -59,10 +65,8 @@ class Tokens {
       if (!isValidToken) {
         return new ApiError(400, "Invalid refresh Token");
       }
-      // generate new access token
       const token = generateAccessToken(userId);
 
-      // send it to user
       return new ApiResponse<AccessToken>(
         200,
         { accessToken: token },

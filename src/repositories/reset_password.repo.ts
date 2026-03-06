@@ -1,5 +1,4 @@
 import { pool } from "../configs/db.js";
-import type { userI } from "../interfaces/user.model.js";
 import type { QueryResult } from "pg";
 import type { PasswordResetI } from "../interfaces/password-reset.model.js";
 
@@ -8,7 +7,7 @@ class ResetPasswordRepo {
   async insertToken(userId: string, tokenHash: string): Promise<string> {
     try {
       const response: QueryResult = await pool.query(
-        "Insert into password_recovery_tokens (user_id, token_hash) values ($1, $2) returning id",
+        "Insert into password_recovery_tokens (user_id, token_hash) values ($1, $2) on conflict(user_id) do update token_hash = $2  returning id",
         [userId, tokenHash],
       );
       return response.rows[0];
@@ -27,6 +26,22 @@ class ResetPasswordRepo {
       return response.rows[0];
     } catch (error: any) {
       throw new Error("Error updating token for password recovery token table");
+    }
+  }
+  /**
+   * 
+   * @param userId 
+   * @returns 
+   */
+  async getUserToken(userId: string): Promise<PasswordResetI> {
+    try {
+      const response: QueryResult = await pool.query(
+        "Select token_hash, used_at, expires_at, user_id from password_recovery_tokens where user_id = $1",
+        [userId],
+      );
+      return response.rows[0];
+    } catch (error) {
+      throw new Error("Error retrieving user password recovery token");
     }
   }
 }

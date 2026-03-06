@@ -24,8 +24,8 @@ class UsersRepo {
   async getById(userId: string): Promise<userI> {
     try {
       const result: QueryResult = await pool.query(
-        "Select name, email, verified_at, profile_picture, id from users where id = $1 AND deleted_at IS  NULL",
-        [userId]
+        "Select name, email, verified_at, profile_picture, id from users where id = $1 AND deleted_at IS NULL",
+        [userId],
       );
       return result.rows[0] ?? null;
     } catch (error: any) {
@@ -42,8 +42,8 @@ class UsersRepo {
   async getByEmail(email: string): Promise<userI> {
     try {
       const result: QueryResult = await pool.query(
-        "Select name, email, verified_at, profile_picture, password_hash, id from users where email = $1 AND deleted_at IS  NULL",
-        [email]
+        "Select name, email, verified_at, profile_picture, password_hash, id from users where email = $1 AND deleted_at IS NULL",
+        [email],
       );
       return result.rows[0] ?? null;
     } catch (error: any) {
@@ -58,13 +58,13 @@ class UsersRepo {
    * @returns
    */
   async createUser(
-    user: Pick<userI, "name" | "password_hash" | "email">
+    user: Pick<userI, "name" | "password_hash" | "email">,
   ): Promise<userI> {
     const { name, email, password_hash } = user;
     try {
       const result: QueryResult = await pool.query(
         `INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email, verified_at, created_on`,
-        [name, email, password_hash]
+        [name, email, password_hash],
       );
       return result.rows[0];
     } catch (error: any) {
@@ -73,32 +73,18 @@ class UsersRepo {
     }
   }
 
-  /**
-   *
-   * @param updateFields
-   * @param values
-   * @param userId
-   * @returns
-   */
-  async updateUser(updateFields: string[], values: string[], userId: string) {
-    // fields that will be allowed to updated by user
-
-    // - name
-    // - password_hash
-    // - profile_picture
-    // - last_login_at
-    // - updated_on
-    // - verified_at
-    const query = updateFields.map((field, index) => `${index + 1}`);
-    const queryText = `Update users set () ${query} where id = $1`;
+  async updatePassword(userId: string, updatedPasswordHash: string) {
     try {
-      const result = await pool.query(queryText, [userId, values]);
-      return result.rows[0] || null;
+      const result: QueryResult = await pool.query(
+        "Update users set password_hash = $1 where id = $2 returning id",
+        [updatedPasswordHash, userId],
+      );
+      return result.rows[0];
     } catch (error: any) {
-      console.log("Error updating user", error.message);
+      console.log("Error while creating user", error.message);
+      throw new Error("Error updating user password");
     }
   }
-
   /**
    *
    * @param userId
@@ -108,7 +94,7 @@ class UsersRepo {
     try {
       const result: QueryResult = await pool.query(
         "Update users set deleted_at = $1 where id = $2",
-        [new Date(), userId]
+        [new Date(), userId],
       );
       return result.rows[0] || null;
     } catch (error: any) {
@@ -133,7 +119,7 @@ class UsersRepo {
        WHERE id = $1
        AND verified_at is NULL
        `,
-        [userId]
+        [userId],
       );
 
       await client.query(
@@ -142,7 +128,7 @@ class UsersRepo {
        WHERE id = $1
        AND used_at is NULL
        `,
-        [tokenId]
+        [tokenId],
       );
 
       await client.query("COMMIT");
