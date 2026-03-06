@@ -79,7 +79,7 @@ class ResetPasswordService {
       return new ApiError(400, "Email and password required");
     }
     if (!isValidEmail(email)) {
-      return new ApiError(400, "Invlaid email address");
+      return new ApiError(400, "Invalid email address");
     }
 
     if (password !== confirmPassword) {
