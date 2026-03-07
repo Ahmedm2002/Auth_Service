@@ -7,11 +7,11 @@ import helmet from "helmet";
 import { pinoHttp } from "pino-http";
 ("pino-http");
 import logger from "./utils/logger/logger.js";
+import logRequest from "./middlewares/logger.middleware.js";
 
 dotenv.config();
 
 const apiVersion = process.env.API_VERSION;
-const httpLoger = pinoHttp({ logger });
 
 const app: Express = express();
 app.use(express.static("public/"));
@@ -20,6 +20,7 @@ app.use(helmet());
 transport.verify();
 app.use(express.json({ limit: "16kb" }));
 // app.use(httpLoger);
+app.use(logRequest);
 app.use(`/api`, v1Router);
 
 app.get("/api/", (req, res) => {

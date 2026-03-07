@@ -14,3 +14,11 @@ pool
   .catch((err: any) => {
     console.log("Database connection failed: ", err);
   });
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received, shutting down gracefully...");
+  pool.end(() => {
+    console.log("Database connection closed.");
+    process.exit(0);
+  });
+});

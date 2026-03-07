@@ -1,28 +1,38 @@
-import pino, { levels } from "pino";
+import pino from "pino";
 
+const ENV = process.env.NODE_ENV;
+console.log("ENVIRONMENT: ", ENV);
 const logger = pino({
   level: process.env.LOG_LEVEL || "info",
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-      ignore: "pid,hostname,reqId,action,statusCode,duration",
-      messageFormat: "[{reqId}] {action} {msg} {statusCode} {duration}",
-      translateTime: "yyyy-mm-dd HH:MM:ss.l",
-      singleLine: true,
-    },
-  },
-
+  transport:
+    ENV === "development"
+      ? {
+          target: "pino-pretty",
+          options: {
+            colorize: true,
+            translateTime: "yyyy-mm-dd HH:MM:ss.l o",
+            ignore: "pid,hostname",
+          },
+        }
+      : {
+          target: "pino/file",
+          options: {
+            destination: "logs/app.log",
+          },
+        },
+  redact: [
+    "req.headers.authorization",
+    "req.headers.cookie",
+    "password",
+    "token",
+    "refreshToken",
+    "accessToken",
+  ],
+  timestamp: pino.stdTimeFunctions.isoTime,
   base: {
-    pid: true,
+    pid: false,
+    hostname: false,
   },
-  formatters: {
-    level: (label, number) => {
-      return { level: label.toUpperCase() };
-    },
-  },
-
-  // transport: {},
 });
 
 export default logger;

@@ -1,10 +1,11 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Response, NextFunction } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import * as jwt from "jsonwebtoken";
 import CONSTANTS from "../constants.js";
+import type CustomRequest from "../types/customReq.type.js";
 
 async function authenticateUser(
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -21,6 +22,7 @@ async function authenticateUser(
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
     console.log("User verified", decoded);
     next();
+    req.user = decoded as { id: string };
   } catch (error: any) {
     if (
       error instanceof jwt.JsonWebTokenError ||
