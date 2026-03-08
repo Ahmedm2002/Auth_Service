@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import ApiResponse from "./utils/responses/ApiResponse.js";
 import transport from "./configs/nodemailer.js";
 import helmet from "helmet";
-import { pinoHttp } from "pino-http";
 ("pino-http");
 import logger from "./utils/logger/logger.js";
 import logRequest from "./middlewares/logger.middleware.js";
@@ -19,7 +18,6 @@ app.use(helmet());
 
 transport.verify();
 app.use(express.json({ limit: "16kb" }));
-// app.use(httpLoger);
 app.use(logRequest);
 app.use(`/api`, v1Router);
 

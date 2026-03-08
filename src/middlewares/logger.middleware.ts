@@ -8,8 +8,9 @@ const logRequest = (req: CustomRequest, res: Response, next: NextFunction) => {
   const requestId = crypto.randomUUID().toString();
   req.requestId = requestId;
   logger.info(`Request ID: ${requestId} - ${req.method} ${req.url}`);
-  req.on("close", () => {
-    const duration = Date.now() - startTime;
+  req.on("end", () => {
+    const date = new Date();
+    const duration = date.getTime() - startTime;
     logger.info(
       `Request ID: ${requestId} - ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`,
     );

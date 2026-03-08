@@ -1,9 +1,9 @@
 import type { Response, NextFunction } from "express";
 import ApiError from "../utils/responses/ApiError.js";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import CONSTANTS from "../constants.js";
 import type CustomRequest from "../types/customReq.type.js";
-
+import logger from "../utils/logger/logger.js";
 async function authenticateUser(
   req: CustomRequest,
   res: Response,
@@ -14,22 +14,23 @@ async function authenticateUser(
   if (!authHeader) {
     return res.status(400).json(new ApiError(400, "Auth headers missing"));
   }
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader && authHeader?.split(" ")[1];
   if (!token) {
     return res.status(401).json(new ApiError(401, "Access token required"));
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    console.log("User verified", decoded);
     next();
-    req.user = decoded as { id: string };
+    req.user = { id: decoded.sub as string };
   } catch (error: any) {
+    const { JsonWebTokenError, TokenExpiredError } = jwt;
     if (
-      error instanceof jwt.JsonWebTokenError ||
-      error instanceof jwt.TokenExpiredError
+      error instanceof JsonWebTokenError ||
+      error instanceof TokenExpiredError
     ) {
       return res.status(401).json(new ApiError(401, "Token expired"));
     }
+    logger.fatal("Auth Middleware unhandleled scenario", error.message);
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }

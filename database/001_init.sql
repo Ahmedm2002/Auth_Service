@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS user_sessions (
   device_id TEXT UNIQUE NOT NULL,
   refresh_token TEXT NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  device_type TEXT DEFAULT ''
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  device_type JSONB DEFAULT '{}'::jsonb
 );
 
 CREATE TABLE IF NOT EXISTS email_verification_tokens(
