@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import CONSTANTS from "../constants.js";
 import type CustomRequest from "../types/customReq.type.js";
 import logger from "../utils/logger/logger.js";
+import { UAParser } from "ua-parser-js";
+
 async function authenticateUser(
   req: CustomRequest,
   res: Response,
@@ -22,6 +24,8 @@ async function authenticateUser(
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
     next();
     req.user = { id: decoded.sub as string };
+    req.deviceInfo = new UAParser(req.headers["user-agent"] || "");
+    console.log(req.deviceInfo);
   } catch (error: any) {
     const { JsonWebTokenError, TokenExpiredError } = jwt;
     if (
