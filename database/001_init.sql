@@ -37,5 +37,5 @@ CREATE TABLE IF NOT EXISTS password_recovery_tokens(
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   token_hash TEXT NOT NULL,
-  user_at TIMESTAMPTZ DEFAULT NULL
+  used_at TIMESTAMPTZ DEFAULT NULL
 )

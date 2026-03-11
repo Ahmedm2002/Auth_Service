@@ -5,16 +5,32 @@ import crypto from "crypto";
 
 const logRequest = (req: CustomRequest, res: Response, next: NextFunction) => {
   const startTime = Date.now();
-  const requestId = crypto.randomUUID().toString();
+
+  const requestId =
+    (req.headers["x-request-id"] as string | undefined) ?? crypto.randomUUID();
+
   req.requestId = requestId;
-  logger.info(`Request ID: ${requestId} - ${req.method} ${req.url}`);
-  req.on("end", () => {
-    const date = new Date();
-    const duration = date.getTime() - startTime;
+  res.setHeader("x-request-id", requestId);
+
+  logger.info(
+    { requestId, method: req.method, url: req.url },
+    "Incoming request",
+  );
+
+  res.on("finish", () => {
+    const duration = Date.now() - startTime;
     logger.info(
-      `Request ID: ${requestId} - ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`,
+      {
+        requestId,
+        method: req.method,
+        url: req.originalUrl,
+        statusCode: res.statusCode,
+        durationMs: duration,
+      },
+      "Request completed",
     );
   });
+
   next();
 };
 

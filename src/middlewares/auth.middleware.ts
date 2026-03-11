@@ -22,10 +22,9 @@ async function authenticateUser(
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    next();
     req.user = { id: decoded.sub as string };
     req.deviceInfo = new UAParser(req.headers["user-agent"] || "");
-    console.log(req.deviceInfo);
+    next();
   } catch (error: any) {
     const { JsonWebTokenError, TokenExpiredError } = jwt;
     if (
