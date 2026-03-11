@@ -21,7 +21,7 @@ class VerifyUserService {
     email: string,
     code: string,
   ): Promise<ApiError | ApiResponse<null>> {
-    if (!code || !email || code.length < 4) {
+    if (!code || !email || code.length !== 4) {
       return new ApiError(400, "Please enter 4 verification code");
     }
     if (!isValidEmail(email)) {
@@ -43,11 +43,11 @@ class VerifyUserService {
       }
 
       if (token.used_at) {
-        return new ApiResponse(201, null, "Email already verified");
+        return new ApiResponse(200, null, "Email already verified");
       }
 
       const issuedAt = new Date(token.created_at).getTime();
-      const expires = issuedAt + 300000;
+      const expires = issuedAt + CONSTANTS.OTP_EXPIRY_MS;
 
       if (Date.now() > expires) {
         return new ApiError(400, "Token Expired");
@@ -61,7 +61,7 @@ class VerifyUserService {
 
       await Users.setUserVerified(user.id!, token.id);
 
-      return new ApiResponse(201, null, "User verified successfully");
+      return new ApiResponse(200, null, "User verified successfully");
     } catch (error: any) {
       console.log("Error occured while verify user: ", error.message);
       return new ApiError(500, CONSTANTS.SERVER_ERROR);

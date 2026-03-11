@@ -33,7 +33,12 @@ async function invalidateSession(req: Request, res: Response) {
       sessionId,
       deviceId,
     );
-    return res.status(response.statusCode).json(response);
+    return res
+      .clearCookie("accessToken")
+      .clearCookie("refreshToken")
+      .clearCookie("deviceId")
+      .status(response.statusCode)
+      .json(response);
   } catch (error: any) {
     console.log("Error invalidating user session: ", error?.message);
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));

@@ -7,7 +7,7 @@ class ResetPasswordRepo {
   async insertToken(userId: string, tokenHash: string): Promise<string> {
     try {
       const response: QueryResult = await pool.query(
-        "Insert into password_recovery_tokens (user_id, token_hash) values ($1, $2) on conflict(user_id) do update token_hash = $2  returning id",
+        "Insert into password_recovery_tokens (user_id, token_hash, expires_at) values ($1, $2, NOW() + INTERVAL '5 min') on conflict(user_id) do update set token_hash = $2, expires_at = NOW() + INTERVAL '5 min'  returning id",
         [userId, tokenHash],
       );
       return response.rows[0];
@@ -20,7 +20,7 @@ class ResetPasswordRepo {
   async setTokenUsedAt(tokenId: string): Promise<string> {
     try {
       const response: QueryResult = await pool.query(
-        "Update password_recovery_tokens set used_at = NOW() where id=$1 AND expires_at is null returning id",
+        "Update password_recovery_tokens set used_at = NOW() where id = $1 AND expires_at is null returning id",
         [tokenId],
       );
       return response.rows[0];
@@ -29,9 +29,9 @@ class ResetPasswordRepo {
     }
   }
   /**
-   * 
-   * @param userId 
-   * @returns 
+   *
+   * @param userId
+   * @returns
    */
   async getUserToken(userId: string): Promise<PasswordResetI> {
     try {

@@ -36,5 +36,6 @@ CREATE TABLE IF NOT EXISTS password_recovery_tokens(
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  token_hash TEXT NOT NULL,
   user_at TIMESTAMPTZ DEFAULT NULL
 )

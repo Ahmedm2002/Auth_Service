@@ -24,7 +24,7 @@ class UserSessionService {
       return new ApiResponse<any>(
         200,
         sessions,
-        "sessions fetched successfully"
+        "sessions fetched successfully",
       );
     } catch (error: any) {
       console.log("Error getting user sessions", error.message);
@@ -33,7 +33,7 @@ class UserSessionService {
   }
   async invalidateSession(
     sessionId: string,
-    deviceId: string
+    deviceId: string,
   ): Promise<ApiError | ApiResponse<string>> {
     if (!sessionId || !deviceId) {
       return new ApiError(400, "Required fields missing");
@@ -44,7 +44,7 @@ class UserSessionService {
     try {
       const id: string = await UserSession.deleteUserSession(
         sessionId,
-        deviceId
+        deviceId,
       );
       if (!id) {
         return new ApiError(400, "No session found");
@@ -57,7 +57,7 @@ class UserSessionService {
   }
 
   async deleteAllSessions(
-    userId: string
+    userId: string,
   ): Promise<ApiError | ApiResponse<string[]>> {
     if (!isValidUuid(userId)) {
       return new ApiError(400, "Invalid user id");
@@ -70,7 +70,7 @@ class UserSessionService {
       return new ApiResponse<string[]>(
         200,
         deletedSessions,
-        "Log out from all devices sucessfull"
+        "Log out from all devices sucessfull",
       );
     } catch (error: any) {
       console.log("Error deletin all user sessions", error.message);

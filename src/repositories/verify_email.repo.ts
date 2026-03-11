@@ -18,7 +18,7 @@ class EmailVerificationRepo {
 
     try {
       const response: QueryResult = await pool.query(
-        "INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES ($1, $2) on conflict(user_id) do update set token_hash = $2 RETURNING id",
+        "INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3) on conflict(user_id) do update set token_hash = $2, revoked_at = NOW(), expires_at = $3 RETURNING id",
         [userId, token, "NOW() + INTERVAL '5 min'"],
       );
       return response.rows[0] || null;

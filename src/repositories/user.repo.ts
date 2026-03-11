@@ -8,14 +8,6 @@ import type { QueryResult } from "pg";
 class UsersRepo {
   constructor() {}
 
-  whiteListedCols: string[] = [
-    "name",
-    "password_hash",
-    "profile_picture",
-    "last_login_at",
-    "updated_on",
-    "verified_at",
-  ];
   /**
    *
    * @param userId

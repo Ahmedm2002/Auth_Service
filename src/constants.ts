@@ -4,6 +4,7 @@ type CONSTS = {
     httpOnly: boolean;
     secure: boolean;
   };
+  OTP_EXPIRY_MS: number;
 };
 
 const CONSTANTS: CONSTS = {
@@ -12,6 +13,7 @@ const CONSTANTS: CONSTS = {
     httpOnly: true,
     secure: true,
   },
+  OTP_EXPIRY_MS: 300000,
 };
 
 export default CONSTANTS;
