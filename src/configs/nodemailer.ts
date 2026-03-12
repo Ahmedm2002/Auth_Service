@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import logger from "../utils/logger/logger.js";
 
 const transport = nodemailer.createTransport({
   service: "gmail",
@@ -11,7 +12,7 @@ const transport = nodemailer.createTransport({
 async function testNodemailer() {
   try {
     await transport.verify();
-    console.log("Email Transport setup successfull");
+    logger.info("Email transport verified — SMTP connection OK");
   } catch (err) {
     console.error("Verification failed", err);
   }

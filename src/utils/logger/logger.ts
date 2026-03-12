@@ -1,7 +1,6 @@
 import pino from "pino";
 
 const ENV = process.env.NODE_ENV;
-console.log("ENVIRONMENT: ", ENV);
 const logger = pino({
   level: process.env.LOG_LEVEL || "info",
   transport:

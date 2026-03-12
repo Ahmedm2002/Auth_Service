@@ -1,6 +1,7 @@
 import { pool } from "../configs/db.js";
 import type { QueryResult } from "pg";
 import type { EmailVerificationI } from "../interfaces/email-verification.model.js";
+import logger from "../utils/logger/logger.js";
 
 /**
  *
@@ -23,10 +24,7 @@ class EmailVerificationRepo {
       );
       return response.rows[0] || null;
     } catch (error: any) {
-      console.log(
-        "Error while inserting token into verificationsTable",
-        error.message,
-      );
+      logger.error({ err: error }, "Failed to insert verification token");
       throw new Error("Error adding verification token");
     }
   }
@@ -43,7 +41,7 @@ class EmailVerificationRepo {
       );
       return result.rows[0];
     } catch (error) {
-      console.log("Error while getting user's verification token");
+      logger.error({ err: error }, "Failed to retrieve verification token");
       throw new Error("Error getting user code");
     }
   }

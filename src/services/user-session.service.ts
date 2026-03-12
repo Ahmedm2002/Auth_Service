@@ -4,6 +4,7 @@ import UserSession from "../repositories/user_session.repo.js";
 import ApiError from "../utils/responses/ApiError.js";
 import ApiResponse from "../utils/responses/ApiResponse.js";
 import isValidUuid from "../utils/helperFuncs/isValidUuid.js";
+import logger from "../utils/logger/logger.js";
 class UserSessionService {
   constructor() {}
   /**
@@ -27,7 +28,7 @@ class UserSessionService {
         "sessions fetched successfully",
       );
     } catch (error: any) {
-      console.log("Error getting user sessions", error.message);
+      logger.error({ err: error }, "Failed to fetch all sessions");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
@@ -51,7 +52,7 @@ class UserSessionService {
       }
       return new ApiResponse<string>(200, id, "Session deleted successfully");
     } catch (error: any) {
-      console.log("Error deleting user sessions", error.message);
+      logger.error({ err: error }, "Failed to delete session");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
@@ -73,7 +74,7 @@ class UserSessionService {
         "Log out from all devices sucessfull",
       );
     } catch (error: any) {
-      console.log("Error deletin all user sessions", error.message);
+      logger.error({ err: error }, "Failed to delete all sessions");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }

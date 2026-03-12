@@ -87,7 +87,7 @@ class AuthService {
         "User saved successfully",
       );
     } catch (error: any) {
-      console.log("Error occured while login: ", error.message);
+      logger.error({ err: error }, "Login failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
@@ -133,7 +133,6 @@ class AuthService {
       });
       // TODO: Implement the email sending using queues
       const token = await sendVerificationCode(email, name);
-      console.log("Token Send to ", newUser.email, ": ", token);
       const token_hash = await bcrypt.hash(token, 10);
       await emaiVerification.insert(newUser.id!, token_hash);
       const parsedUser: SafeUserDto = safeUserParse(newUser);
@@ -143,7 +142,7 @@ class AuthService {
         "User created successfully",
       );
     } catch (error: any) {
-      console.log("Error occured while signup: ", error.message);
+      logger.error({ err: error }, "Signup failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }

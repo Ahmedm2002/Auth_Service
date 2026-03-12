@@ -2,6 +2,7 @@ import type { QueryResult } from "pg";
 import { pool } from "../configs/db.js";
 import crypto from "node:crypto";
 import type { userSessionI } from "../interfaces/user-sessions.model.js";
+import logger from "../utils/logger/logger.js";
 /**
  *
  */
@@ -37,10 +38,7 @@ class UserSessionsRepo {
 
       return result.rows[0] ?? null;
     } catch (error: any) {
-      console.log(
-        "Error occured while registering user session: ",
-        error.message,
-      );
+      logger.error({ err: error }, "Failed to create user session");
       throw new Error("Error while registering user session: ", error.message);
     }
   }
@@ -57,7 +55,7 @@ class UserSessionsRepo {
       );
       return result.rows;
     } catch (error: any) {
-      console.log("Error occured deleting user session: ", error.message);
+      logger.error({ err: error }, "Failed to delete all user sessions");
       throw new Error("Error occured during deleting user session");
     }
   }
@@ -75,7 +73,7 @@ class UserSessionsRepo {
       );
       return session.rows ?? null;
     } catch (error: any) {
-      console.log("Error getting users sessions: ", error.message);
+      logger.error({ err: error }, "Failed to get all user sessions");
       throw new Error("Error getting users sessions");
     }
   }
@@ -91,7 +89,7 @@ class UserSessionsRepo {
       );
       return result.rows[0];
     } catch (error: any) {
-      console.log("Error deleting user session");
+      logger.error({ err: error }, "Failed to delete user session");
       throw new Error("Error deleting user session");
     }
   }
@@ -103,7 +101,7 @@ class UserSessionsRepo {
       );
       return session.rows[0];
     } catch (error: any) {
-      console.log("Error deleting user session", error.message);
+      logger.error({ err: error }, "Failed to retrieve user session");
       throw new Error("Error retreiveng user session");
     }
   }

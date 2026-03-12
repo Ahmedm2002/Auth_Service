@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import CONSTANTS from "../constants.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import isValidEmail from "../utils/helperFuncs/isValidEmail.js";
+import logger from "../utils/logger/logger.js";
 
 class VerifyUserService {
   constructor() {}
@@ -63,7 +64,7 @@ class VerifyUserService {
 
       return new ApiResponse(200, null, "User verified successfully");
     } catch (error: any) {
-      console.log("Error occured while verify user: ", error.message);
+      logger.error({ err: error }, "Email verification failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
@@ -89,13 +90,12 @@ class VerifyUserService {
       }
 
       const token = await sendVerificationCode(user.email, user.name);
-      console.log("Token Send to ", user.email, ": ", token);
       const token_hash = await bcrypt.hash(token, 10);
       await emaiVerification.insert(user.id!, token_hash);
 
       return new ApiResponse(201, null, "Code send to email");
     } catch (error: any) {
-      console.log("Error occured while resending code to user ", error.message);
+      logger.error({ err: error }, "Resend verification code failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }

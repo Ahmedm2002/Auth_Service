@@ -3,6 +3,7 @@ import ApiError from "../utils/responses/ApiError.js";
 import CONSTANTS from "../constants.js";
 import userSessionServ from "../services/user-session.service.js";
 import tokensServ from "../services/tokens.service.js";
+import logger from "../utils/logger/logger.js";
 /**
  *
  * @param req
@@ -15,7 +16,7 @@ async function getAllSessions(req: Request, res: Response) {
     const response = await userSessionServ.getAllSessions(userId);
     res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log("Error getting user sessions", error.message);
+    logger.error({ err: error }, "Failed to fetch user sessions");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
@@ -40,7 +41,7 @@ async function invalidateSession(req: Request, res: Response) {
       .status(response.statusCode)
       .json(response);
   } catch (error: any) {
-    console.log("Error invalidating user session: ", error?.message);
+    logger.error({ err: error }, "Failed to invalidate session");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
@@ -51,7 +52,7 @@ async function logOutAllDevices(req: Request, res: Response) {
     const response = await userSessionServ.deleteAllSessions(userId);
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log("Error invalidating user session: ", error?.message);
+    logger.error({ err: error }, "Failed to log out all devices");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
@@ -67,7 +68,7 @@ async function getAccessToken(req: Request, res: Response) {
     );
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log("Error while creating access token: ", error.message);
+    logger.error({ err: error }, "Failed to generate access token");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }

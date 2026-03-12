@@ -2,6 +2,7 @@ import type { Response, Request } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import CONSTANTS from "../constants.js";
 import authServ from "../services/auth.service.js";
+import logger from "../utils/logger/logger.js";
 
 /**
  *
@@ -21,7 +22,7 @@ async function loginUser(req: Request, res: Response): Promise<Response> {
       .cookie("deviceId", response.data?.deviceId, CONSTANTS.cookieOpts)
       .json(response);
   } catch (error) {
-    console.log("Error: ", error);
+    logger.error({ err: error }, "Login failed unexpectedly");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
@@ -38,7 +39,7 @@ async function signupUser(req: Request, res: Response): Promise<Response> {
     const response = await authServ.signup(name, password, email);
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log("Error: ", error.message);
+    logger.error({ err: error }, "Signup failed unexpectedly");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }

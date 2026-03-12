@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { app } from "./app.js";
 import { pool } from "./configs/db.js";
+import logger from "./utils/logger/logger.js";
 
 dotenv.config();
 
@@ -8,17 +9,18 @@ pool
   .connect()
   .then(() => {
     app.listen(process.env.PORT || 3000, () => {
-      console.log(`Server started at http://localhost:${process.env.PORT}`);
+      logger.info({ port: process.env.PORT || 3000 }, "Server started");
     });
   })
   .catch((err: any) => {
-    console.log("Database connection failed: ", err);
+    logger.fatal({ err }, "Database connection failed — server will not start");
+    process.exit(1);
   });
 
 process.on("SIGTERM", () => {
-  console.log("SIGTERM received, shutting down gracefully...");
+  logger.info("SIGTERM received, shutting down gracefully");
   pool.end(() => {
-    console.log("Database connection closed.");
+    logger.info("Database pool closed");
     process.exit(0);
   });
 });

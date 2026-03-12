@@ -1,6 +1,7 @@
 import { pool } from "../configs/db.js";
 import type { userI } from "../interfaces/user.model.js";
 import type { QueryResult } from "pg";
+import logger from "../utils/logger/logger.js";
 
 /**
  *
@@ -21,7 +22,7 @@ class UsersRepo {
       );
       return result.rows[0] ?? null;
     } catch (error: any) {
-      console.log("Error occured while retrieving user by id", error.message);
+      logger.error({ err: error }, "Failed to get user by id");
       throw new Error("Error retreving user by id");
     }
   }
@@ -39,7 +40,7 @@ class UsersRepo {
       );
       return result.rows[0] ?? null;
     } catch (error: any) {
-      console.log("Error occured while retrieving user by id", error.message);
+      logger.error({ err: error }, "Failed to get user by email");
       throw new Error("Error retrieving user by email");
     }
   }
@@ -60,7 +61,7 @@ class UsersRepo {
       );
       return result.rows[0];
     } catch (error: any) {
-      console.log("Error while creating user", error.message);
+      logger.error({ err: error }, "Failed to create user");
       throw new Error("Error creating user");
     }
   }
@@ -73,7 +74,7 @@ class UsersRepo {
       );
       return result.rows[0];
     } catch (error: any) {
-      console.log("Error while creating user", error.message);
+      logger.error({ err: error }, "Failed to update user password");
       throw new Error("Error updating user password");
     }
   }
@@ -90,7 +91,7 @@ class UsersRepo {
       );
       return result.rows[0] || null;
     } catch (error: any) {
-      console.log("Error soft deleting user", error.message);
+      logger.error({ err: error }, "Failed to soft-delete user");
       throw new Error("Error deleting user");
     }
   }
@@ -125,7 +126,7 @@ class UsersRepo {
 
       await client.query("COMMIT");
     } catch (error: any) {
-      console.log("Error in updated user status to verified: ", error.message);
+      logger.error({ err: error }, "Failed to set user verified");
       await client.query("ROLLBACK");
     } finally {
       client.release();

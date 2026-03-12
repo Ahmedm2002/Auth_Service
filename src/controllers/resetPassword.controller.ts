@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import ApiError from "../utils/responses/ApiError.js";
 import CONSTANTS from "../constants.js";
 import resetPasswordServ from "../services/reset-password.service.js";
+import logger from "../utils/logger/logger.js";
 
 /**
  *
@@ -19,7 +20,7 @@ async function resetPassword(req: Request, res: Response) {
     );
     res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log("Error resetting user password: ", error.message);
+    logger.error({ err: error }, "Reset password failed unexpectedly");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }
@@ -36,10 +37,7 @@ async function forgotPassword(req: Request, res: Response) {
     const response = await resetPasswordServ.forgotPassword(email);
     res.status(response.statusCode).json(response);
   } catch (error: any) {
-    console.log(
-      "Error occured while user requested for reset password: ",
-      error.message,
-    );
+    logger.error({ err: error }, "Forgot password request failed unexpectedly");
     return res.status(500).json(new ApiError(500, CONSTANTS.SERVER_ERROR));
   }
 }

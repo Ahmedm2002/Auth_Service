@@ -6,6 +6,7 @@ import ApiResponse from "../utils/responses/ApiResponse.js";
 import UserSession from "../repositories/user_session.repo.js";
 import bcrypt from "bcrypt";
 import { generateAccessToken } from "../utils/jwt/generateTokens.js";
+import logger from "../utils/logger/logger.js";
 
 type AccessToken = { accessToken: string };
 class Tokens {
@@ -73,7 +74,7 @@ class Tokens {
         "Access token generated successfully",
       );
     } catch (error: any) {
-      console.log("Error occured while generated new access token for user");
+      logger.error({ err: error }, "Failed to generate access token");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }

@@ -12,6 +12,7 @@ import {
 } from "../utils/helperFuncs/randomToken.js";
 import bcrypt from "bcrypt";
 import UserSession from "../repositories/user_session.repo.js";
+import logger from "../utils/logger/logger.js";
 class ResetPasswordService {
   constructor() {}
   /**
@@ -47,10 +48,7 @@ class ResetPasswordService {
         "If the email exists, a reset link has been sent.",
       );
     } catch (error: any) {
-      console.log(
-        "Error sending reset password email to user: ",
-        error.message,
-      );
+      logger.error({ err: error }, "Forgot password flow failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
@@ -123,7 +121,7 @@ class ResetPasswordService {
         "Password reset successfull, Please Login again",
       );
     } catch (error: any) {
-      console.log("Error sending reseting user password: ", error.message);
+      logger.error({ err: error }, "Reset password flow failed unexpectedly");
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
