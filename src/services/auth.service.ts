@@ -19,6 +19,8 @@ import emaiVerification from "../repositories/verify_email.repo.js";
 import sendVerificationCode from "../utils/nodeMailer/sendVerificationEmail.js";
 import { fromError } from "zod-validation-error";
 import logger from "../utils/logger/logger.js";
+import { UAParser } from "ua-parser-js";
+import type { DeviceInfo } from "../interfaces/user-sessions.model.js";
 class AuthService {
   constructor() {}
   /**
@@ -30,6 +32,7 @@ class AuthService {
   async login(
     email: string,
     password: string,
+    userAgent: string,
   ): Promise<ApiError | ApiResponse<LoginResDto>> {
     if (!email || !password) {
       logger.warn("Empty value in fields");
@@ -57,14 +60,22 @@ class AuthService {
       const deviceId: string = crypto.randomBytes(10).toString("hex");
 
       const { accessToken, refreshToken }: Tokens = generateTokens(user.id!);
-      // TODO: Detect the user device type i.e mobile, browser etc
-      const deviceType = "";
+
+      const parser = new UAParser(userAgent);
+      const deviceInfo: DeviceInfo = {
+        browser: parser.getBrowser().name || "",
+        os: parser.getOS().name || "",
+        device: parser.getDevice().type || "",
+        vendor: parser.getDevice().vendor || "",
+        model: parser.getDevice().model || "",
+      };
+
       const refreshTokenHash = await bcrypt.hash(refreshToken, 5);
       const sessionId = await userSession.create(
         user.id!,
         deviceId,
         refreshTokenHash,
-        deviceType,
+        deviceInfo,
       );
 
       if (!sessionId) {

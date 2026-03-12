@@ -1,7 +1,7 @@
 import type { QueryResult } from "pg";
 import { pool } from "../configs/db.js";
 import crypto from "node:crypto";
-import type { userSessionI } from "../interfaces/user-sessions.model.js";
+import type { userSessionI, DeviceInfo } from "../interfaces/user-sessions.model.js";
 import logger from "../utils/logger/logger.js";
 /**
  *
@@ -20,7 +20,7 @@ class UserSessionsRepo {
     userId: string,
     deviceId: string,
     refreshTokenHash: string,
-    deviceType: string,
+    deviceType: DeviceInfo,
   ): Promise<Pick<userSessionI, "id"> | null> {
     if (!userId || !deviceId || !refreshTokenHash) {
       throw new Error("Missing required session fields");
@@ -96,7 +96,7 @@ class UserSessionsRepo {
   async getSession(userId: string, sessionId: string): Promise<userSessionI> {
     try {
       const session: QueryResult = await pool.query(
-        "SELECT id , user_id, refresh_token, expires_at, device_id from user_sessions where id = $1 AND user_id = $2",
+        "SELECT id, user_id, refresh_token, expires_at, device_id, device_type FROM user_sessions WHERE id = $1 AND user_id = $2",
         [sessionId, userId],
       );
       return session.rows[0];
