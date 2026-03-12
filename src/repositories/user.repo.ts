@@ -78,6 +78,20 @@ class UsersRepo {
       throw new Error("Error updating user password");
     }
   }
+
+  async updateLastLogin(userId: string) {
+    try {
+      const result: QueryResult = await pool.query(
+        "UPDATE users SET last_login_at = now() WHERE id = $1 RETURNING id",
+        [userId]
+      );
+      return result.rows[0];
+    } catch (error: any) {
+      logger.error({ err: error }, "Failed to update last login");
+      throw new Error("Error updating user last login timestamp");
+    }
+  }
+
   /**
    *
    * @param userId

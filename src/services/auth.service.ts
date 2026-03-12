@@ -57,6 +57,8 @@ class AuthService {
         return new ApiError(400, "Invalid credentials");
       }
 
+      await Users.updateLastLogin(user.id!);
+
       const deviceId: string = crypto.randomBytes(10).toString("hex");
 
       const { accessToken, refreshToken }: Tokens = generateTokens(user.id!);

@@ -12,8 +12,9 @@ import logger from "../utils/logger/logger.js";
  */
 async function loginUser(req: Request, res: Response): Promise<Response> {
   const { email, password } = req.body;
+  const userAgent = req.headers["user-agent"] || "";
   try {
-    const response = await authServ.login(email, password);
+    const response = await authServ.login(email, password, userAgent);
 
     return res
       .status(response.statusCode)
