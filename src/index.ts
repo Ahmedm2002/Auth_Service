@@ -4,7 +4,6 @@ import { pool } from "./configs/db.js";
 import logger from "./utils/logger/logger.js";
 
 dotenv.config();
-
 pool
   .connect()
   .then(() => {

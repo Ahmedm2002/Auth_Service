@@ -2,8 +2,7 @@ import transport from "../../configs/nodemailer.js";
 import resetPasswordTemplate from "../../templates/passwordReset.temp.js";
 
 async function sendPasswordResetEmail(email: string, token: string) {
-  const resetUrl =
-    process.env.RESET_PASSWORD_REDIRECT_BASE_URL + `?/t=${token}`;
+  const resetUrl = process.env.RESET_PASSWORD_REDIRECT_BASE_URL + `?t=${token}`;
   try {
     await transport.sendMail({
       to: email,

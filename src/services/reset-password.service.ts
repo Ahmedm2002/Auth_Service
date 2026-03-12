@@ -90,7 +90,11 @@ class ResetPasswordService {
       }
       const user = await Users.getByEmail(email);
       if (!user) {
-        return new ApiError(404, "User not found");
+        return new ApiResponse(
+          200,
+          null,
+          "If the email exists, a reset link has been sent.",
+        );
       }
       const resetToken = await resetPassRepo.getUserToken(user.id);
       if (!resetToken) {

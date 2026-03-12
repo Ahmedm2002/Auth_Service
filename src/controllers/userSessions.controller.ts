@@ -4,6 +4,7 @@ import CONSTANTS from "../constants.js";
 import userSessionServ from "../services/user-session.service.js";
 import tokensServ from "../services/tokens.service.js";
 import logger from "../utils/logger/logger.js";
+import type CustomRequest from "../types/customReq.type.js";
 /**
  *
  * @param req
@@ -46,10 +47,10 @@ async function invalidateSession(req: Request, res: Response) {
   }
 }
 
-async function logOutAllDevices(req: Request, res: Response) {
-  const { userId } = req.body;
+async function logOutAllDevices(req: CustomRequest, res: Response) {
+  const userId = req?.user?.id;
   try {
-    const response = await userSessionServ.deleteAllSessions(userId);
+    const response = await userSessionServ.deleteAllSessions(userId!);
     return res.status(response.statusCode).json(response);
   } catch (error: any) {
     logger.error({ err: error }, "Failed to log out all devices");

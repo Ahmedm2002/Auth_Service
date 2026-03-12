@@ -20,7 +20,7 @@ class ResetPasswordRepo {
   async setTokenUsedAt(tokenId: string): Promise<string> {
     try {
       const response: QueryResult = await pool.query(
-        "Update password_recovery_tokens set used_at = NOW() where id = $1 AND expires_at is null returning id",
+        "Update password_recovery_tokens set used_at = NOW() where id = $1 AND expires_at is not null returning id",
         [tokenId],
       );
       return response.rows[0];

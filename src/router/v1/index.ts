@@ -9,7 +9,7 @@ const router: Router = Router();
 
 router.use("/v1/auth", authRoutes);
 router.use("/v1/verify", verficationRoutes);
-router.use("/v1/user-session", authenticateUser, sessionRoutes);
+router.use("/v1/user-session", sessionRoutes);
 router.use("/v1/password", resetPassRoutes);
 
 export default router;

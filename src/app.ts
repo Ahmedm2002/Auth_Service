@@ -1,6 +1,5 @@
 import express, { type Express } from "express";
 import v1Router from "./router/v1/index.js";
-import dotenv from "dotenv";
 import ApiResponse from "./utils/responses/ApiResponse.js";
 import transport from "./configs/nodemailer.js";
 import helmet from "helmet";
@@ -8,8 +7,6 @@ import helmet from "helmet";
 import logger from "./utils/logger/logger.js";
 import logRequest from "./middlewares/logger.middleware.js";
 import corsMiddleware from "./middlewares/cors.middleware.js";
-
-dotenv.config();
 
 const apiVersion = process.env.API_VERSION;
 

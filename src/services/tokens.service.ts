@@ -51,7 +51,6 @@ class Tokens {
       if (!session) {
         return new ApiError(404, "No session found");
       }
-      const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
 
       const currentTimeMS = Date.now();
       const tokenExpiryDateMS = new Date(session.expires_at!).getTime();
