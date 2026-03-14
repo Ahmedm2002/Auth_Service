@@ -83,7 +83,7 @@ class AuthService {
       if (!sessionId) {
         return new ApiError(
           500,
-          "There was unexpected error creating your session. Try again later",
+          "There was unexpected error creating your session. Please try again later",
         );
       }
       const parsedUser: SafeUserDto = safeUserParse(user);
@@ -97,7 +97,7 @@ class AuthService {
           deviceId,
           sessionId: sessionId.id!,
         },
-        "User saved successfully",
+        "logged in successfully",
       );
     } catch (error: any) {
       logger.error({ err: error }, "Login failed unexpectedly");
