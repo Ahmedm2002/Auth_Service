@@ -4,3 +4,15 @@ dockerFile
 node_modules
 .gitignore
 .git
+logs/*
+dist/*
+__tests__/*
+coverage/*
+*.log
+*.md
+*.yml
+*.env
+*.dockerignore
+Dockerfile
+compose.yaml
+nodemon.json

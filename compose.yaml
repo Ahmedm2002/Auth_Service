@@ -11,7 +11,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/
     networks:
-      - database
+      - auth_service_backend
   pgAdmin:
     image: dpage/pgadmin4
     container_name: pgAdmin
@@ -21,15 +21,26 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     networks:
-      - database
+      - auth_service_backend
 
   # redis:
   #   build: redis
   #   ports:
   #     - "8080:80"
+  backend:
+    build: .
+    container_name: auth_service
+    environment:
+      - PORT=3000
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    networks:
+      - auth_service_backend
 
 volumes:
   data:
 
 networks:
-  database:
+  auth_service_backend:

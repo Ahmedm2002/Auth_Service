@@ -19,7 +19,7 @@
   },
   "name": "auth_service",
   "version": "1.0.0",
-  "description": "Scaleable authentication service with email verification and password reset options",
+  "description": "Stateless API-first authentication with email login, verification, and password recovery. Built with Node.js, Express, and PostgreSQL for secure and scalable user management.",
   "main": "index.ts",
   "type": "module",
   "scripts": {

@@ -4,4 +4,4 @@ node_modules/*
 dist/
 coverage/*
 .env
-logs/*
+logs/*   
