@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS email_verification_tokens(
   expires_at TIMESTAMPTZ NOT NULL 
 ) 
 
-CREATE TABLE IF NOT EXISTS password_recovery_tokens(
+CREATE TABLE IF NOT EXISTS password_reset_tokens(
   id UUID PRIMARY KEY default gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   expires_at TIMESTAMPTZ NOT NULL,
