@@ -12,15 +12,15 @@ We built this service using **Node.js, Express, and PostgreSQL**, and structured
 
 When you look at the codebase, you will notice distinct boundaries:
 
-We use **routes** to define our API endpoints and map them to specific handlers. Those handlers are our **controllers**, which are strictly responsible for receiving HTTP requests, extracting the necessary data, and formatting the final response. Controllers do not contain business logic; they pass the validated data down to our **services**. 
+We use **routes** to define our API endpoints and map them to specific handlers. Those handlers are our **controllers**, which are strictly responsible for receiving HTTP requests, extracting the necessary data, and formatting the final response. Controllers do not contain business logic; they pass the validated data down to our **services**.
 
 The **services** layer is the heart of the application. This is where the actual work happens—verifying passwords, determining if a session is valid, or managing the rules around password resets. However, services do not know how to talk to the database directly. Instead, they rely on **repositories**. The repository layer contains all of our raw SQL queries, keeping our business logic perfectly isolated from our database engine.
 
 ## The Flow of a Request
 
-To understand how the system works, it helps to follow a request from start to finish. 
+To understand how the system works, it helps to follow a request from start to finish.
 
-When a client makes a request, it hits our API and matches a specific **route**. The route forwards the request to the appropriate **controller**. The controller pulls out the necessary information—like a user's email and password from the request body—and hands it over to the **service**. 
+When a client makes a request, it hits our API and matches a specific **route**. The route forwards the request to the appropriate **controller**. The controller pulls out the necessary information—like a user's email and password from the request body—and hands it over to the **service**.
 
 The service applies our business rules and asks the **repository** to fetch or update data. The repository executes the SQL query against the **database** and returns the raw data back to the service. Finally, the service finishes its work, passes the result back to the controller, and the controller sends an organized HTTP response back to the client.
 
