@@ -19,8 +19,8 @@ class EmailVerificationRepo {
 
     try {
       const response: QueryResult = await pool.query(
-        "INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3) on conflict(user_id) do update set token_hash = $2, revoked_at = NOW(), expires_at = $3 RETURNING id",
-        [userId, token, "NOW() + INTERVAL '5 min'"],
+        "INSERT INTO email_verification_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, NOW() + INTERVAL '5 min') on conflict(user_id) do update set token_hash = $2, revoked_at = NOW(), expires_at = NOW() + INTERVAL '5 min' RETURNING id",
+        [userId, token],
       );
       return response.rows[0] || null;
     } catch (error: any) {

@@ -145,9 +145,11 @@ class AuthService {
         password_hash,
       });
       // TODO: Implement the email sending using queues
-      const token = await sendVerificationCode(email, name);
-      const token_hash = await bcrypt.hash(token, 10);
-      await emaiVerification.insert(newUser.id!, token_hash);
+      process.nextTick(async () => {
+        const token = await sendVerificationCode(email, name);
+        const token_hash = await bcrypt.hash(token, 10);
+        await emaiVerification.insert(newUser.id!, token_hash);
+      });
       const parsedUser: SafeUserDto = safeUserParse(newUser);
       return new ApiResponse<SignupResDto>(
         201,

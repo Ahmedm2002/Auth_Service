@@ -1,8 +1,9 @@
 import transport from "../../configs/nodemailer.js";
 import verificationEmailTemplate from "../../templates/emailVerification.temp.js";
+import crypto from "node:crypto";
 
 async function sendVerificationCode(email: string, username: string) {
-  const code = getRandomNum();
+  const code = String(crypto.randomInt(1000, 9999));
   try {
     await transport.sendMail({
       to: email,
@@ -17,11 +18,3 @@ async function sendVerificationCode(email: string, username: string) {
 }
 
 export default sendVerificationCode;
-
-function getRandomNum(): string {
-  let code = "";
-  for (let i = 0; i < 4; i++) {
-    code += Math.floor(Math.random() * 9);
-  }
-  return code;
-}

@@ -41,7 +41,7 @@ function verificationEmailTemplate(username: string, code: string) {
                   </div>
 
                   <p style="margin:0 0 16px 0; color:#555; font-size:13px; line-height:1.6;">
-                    This code will expire in a few minutes for security reasons.
+                    This code will expire in a 5 minutes for security reasons.
                   </p>
 
                   <p style="margin:0; color:#777; font-size:12px;">
@@ -52,7 +52,7 @@ function verificationEmailTemplate(username: string, code: string) {
 
               <tr>
                 <td style="background:#f4f6f8; padding:16px; text-align:center; font-size:12px; color:#888;">
-                  © ${new Date().getFullYear()} Your Company
+                  © ${new Date().getFullYear()} GalaxyDev.pk
                 </td>
               </tr>
 
