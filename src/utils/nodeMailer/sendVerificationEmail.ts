@@ -3,7 +3,7 @@ import verificationEmailTemplate from "../../templates/emailVerification.temp.js
 import crypto from "node:crypto";
 
 async function sendVerificationCode(email: string, username: string) {
-  const code = String(crypto.randomInt(1000, 9999));
+  const code = String(crypto.randomInt(100000, 999999));
   try {
     await transport.sendMail({
       to: email,

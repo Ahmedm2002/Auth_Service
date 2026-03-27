@@ -39,7 +39,7 @@ class ResetPasswordService {
       if (!id) {
         return new ApiError(500, "Error generating reset password token");
       }
-      // TODO : Blocking Code, Implement the email sending using queues
+      // TODO :Implement the email sending using queues
       process.nextTick(async () => {
         await sendPasswordResetEmail(email, originalToken);
       });

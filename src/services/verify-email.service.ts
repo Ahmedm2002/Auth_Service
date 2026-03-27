@@ -22,7 +22,7 @@ class VerifyUserService {
     email: string,
     code: string,
   ): Promise<ApiError | ApiResponse<null>> {
-    if (!code || !email || code.length !== 4) {
+    if (!code || !email || code.length !== 6) {
       return new ApiError(400, "Please enter 4 verification code");
     }
     if (!isValidEmail(email)) {
@@ -95,7 +95,10 @@ class VerifyUserService {
 
       return new ApiResponse(201, null, "Code send to email");
     } catch (error: any) {
-      logger.error({ err: error }, "Resend verification code failed unexpectedly");
+      logger.error(
+        { err: error },
+        "Resend verification code failed unexpectedly",
+      );
       return new ApiError(500, CONSTANTS.SERVER_ERROR);
     }
   }
