@@ -4,7 +4,6 @@ import verficationRoutes from "./verifyUser.routes.js";
 import sessionRoutes from "./userSessions.routes.js";
 import resetPassRoutes from "./resetPassword.routes.js";
 import healthRoutes from "./health.routes.js";
-import authenticateUser from "../../middlewares/auth.middleware.js";
 
 const router: Router = Router();
 
